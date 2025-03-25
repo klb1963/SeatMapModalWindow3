@@ -1,0 +1,29 @@
+{
+  "redAppId": "customworkflow-sabre-x",
+  "name": "com-sabre-redapp-example3-web-customworkflow-web-module",
+  "bundleSymbolicName": "com.sabre.redapp.example3.web.customworkflow",
+  "bundleName": "Custom Workflow sample",
+  "contactDetails": {
+    "author": "SDK",
+    "email": "scm-support@sabre.com",
+    "phoneNumber": "123-456-789",
+    "company": "Sabre Inc.",
+    "contactName": "SRW Developers",
+    "website": "http://www.sabre.com"
+  },
+  "authorizations": [
+    {
+      "name": "com.sabre.edge.dynamo.cf.service.CommandMessageService",
+      "threshold": "20",
+      "metric": "tpm"
+    }
+  ],
+  "customWorkflows": [
+    {
+      "label": "manifest.json Workflow",
+      "priority": 100,
+      "service": "CustomWorkflowService",
+      "cssClasses": "redapp-web-customworkflow-manifestjson"
+    }
+  ]
+}

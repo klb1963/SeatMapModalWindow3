@@ -1,0 +1,37 @@
+{
+  "name": "com-sabre-redapp-example3-web-customworkflow-web-module-src",
+  "version": "1.0.5",
+  "description": "NGV module",
+  "author": {
+    "name": "SR360 SDK"
+  },
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE.txt",
+  "dependencies": {
+    "sabre-ngv-app": "*",
+    "sabre-ngv-core": "*",
+    "sabre-ngv-xp": "*",
+    "sabre-ngv-custom-forms": "*",
+    "sabre-ngv-commsg": "*",
+    "sabre-ngv-redAppSidePanel": "*",
+    "sabre-ngv-pos-cdm": "*",
+    "sabre-ngv-modals": "*",
+    "sabre-ngv-notification": "*"
+  },
+  "ngv": {
+    "buildDependencies": {
+      "sabre-ngv-app": "*",
+      "sabre-ngv-core": "*",
+      "sabre-ngv-xp": "*",
+      "sabre-ngv-custom-forms": "*",
+      "sabre-ngv-commsg": "*",
+      "sabre-ngv-redAppSidePanel": "*",
+      "sabre-ngv-pos-cdm": "*",
+      "sabre-ngv-modals": "*",
+      "sabre-ngv-notification": "*"
+    },
+    "concierge_version_min": "7.5.5",
+    "runtimeDependencies": {},
+    "testDependencies": {}
+  }
+}
