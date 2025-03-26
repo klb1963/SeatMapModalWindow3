@@ -14,11 +14,10 @@ import {showBanners} from './components/showBanners';
 import {refreshTripSummary} from './components/refreshTripSummary';
 import {callExternalService} from './components/callExternalService';
 import {createNotificationForm, hideNotifications} from "./components/createNotificationForm";
-import {showSeatMapModal} from './components/abc-seatmap/showSeatMapModal';
 
 import {PublicAirAvailabilityService} from 'sabre-ngv-airAvailability/services/PublicAirAvailabilityService';
 import {SeatMapAvailTile} from './components/abc-seatmap/widgets/SeatMapAvailTile'; // ✅ Availability TileWidget
-import {SeatMapAvailView} from './components/abc-seatmap/widgets/SeatMapAvailView';   // ✅ модальное окно открываемое по клику на TileWidget
+import {SeatMapAvailView} from './components/abc-seatmap/widgets/SeatMapAvailView';   // ✅ модальное окно, открываемое по клику на TileWidget
 import {ReactModalOptions} from 'sabre-ngv-modals/components/PublicReactModal/ReactModalOptions';
 import {PublicModalsService} from 'sabre-ngv-modals/services/PublicModalService';
 
