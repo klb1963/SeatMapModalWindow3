@@ -1,35 +1,22 @@
 import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { getFlightFromSabreData } from '../abc-seatmap/getFlightFromSabreData';
 
-const SeatMapComponent: React.FC = () => {
-  const iframeRef = React.useRef<HTMLIFrameElement>(null);
+interface SeatMapProps {
+  config: any;
+  data: any; // вместо flight теперь получаем весь data
+}
+
+const SeatMapComponent: React.FC<SeatMapProps> = ({ config, data }) => {
+  const [segmentIndex, setSegmentIndex] = useState(0);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  const flight = getFlightFromSabreData(data, segmentIndex); // это рейс с сегментом
+  const flightSegments = data.flightSegments || [];
 
   const seatMapData = {
-    config: {
-      width: 400,
-      lang: 'EN',
-      horizontal: false,
-      rightToLeft: false,
-      visibleFuselage: true,
-      visibleWings: true,
-      builtInDeckSelector: true,
-      singleDeckMode: true,
-      builtInTooltip: true,
-      externalPassengerManagement: false,
-      tooltipOnHover: false,
-      colorTheme: {
-        seatLabelColor: 'white',
-        seatStrokeColor: 'gray'
-      }
-    },
-    flight: {
-      id: '111',
-      airlineCode: 'EK',
-      flightNo: '50',
-      departureDate: '2025-04-21',
-      departure: 'MUC',
-      arrival: 'DXB',
-      cabinClass: 'A'
-    },
+    config,
+    flight,
     layout: {
       decks: [
         {
@@ -38,83 +25,88 @@ const SeatMapComponent: React.FC = () => {
           width: 600,
           height: 400,
           rows: [
-            {
-              label: '1',
-              seats: [
-                { label: 'A', x: 50, y: 50 },
-                { label: 'B', x: 100, y: 50 }
-              ]
-            },
-            {
-              label: '2',
-              seats: [{ label: 'A', x: 50, y: 100 }]
-            }
+            { label: '1', seats: [{ label: 'A', x: 50, y: 50 }, { label: 'B', x: 100, y: 50 }] },
+            { label: '2', seats: [{ label: 'A', x: 50, y: 100 }] }
           ]
         }
       ]
     },
     availability: [
-      {
-        label: '1A',
-        price: 50,
-        currency: 'USD',
-        color: 'green',
-        onlyForPassengerType: ['ADT']
-      },
-      {
-        label: '1B',
-        price: 45,
-        currency: 'USD',
-        color: 'yellow',
-        onlyForPassengerType: ['ADT']
-      },
-      {
-        label: '2A',
-        price: 30,
-        currency: 'USD',
-        color: 'lightblue'
-      }
+      { label: '1A', price: 50, currency: 'USD', color: 'green', onlyForPassengerType: ['ADT'] },
+      { label: '1B', price: 45, currency: 'USD', color: 'yellow', onlyForPassengerType: ['ADT'] },
+      { label: '2A', price: 30, currency: 'USD', color: 'lightblue' }
     ],
-    passengers: [
-      {
-        id: 'PAX1',
-        name: 'Иванов И.И.',
-        type: 'ADT'
-      }
-    ]
+    passengers: [{ id: 'PAX1', name: 'Иванов И.И.', type: 'ADT' }]
   };
 
   const sendToIframe = () => {
     const iframe = iframeRef.current;
-    if (!iframe || !iframe.contentWindow) return;
+    if (!iframe?.contentWindow) {
+      console.warn('⚠️ iframe or contentWindow not available');
+      return;
+    }
 
-    iframe.contentWindow.postMessage(
-      {
-        type: 'seatMaps',
-        config: JSON.stringify(seatMapData.config),
-        flight: JSON.stringify(seatMapData.flight),
-        layout: JSON.stringify(seatMapData.layout),
-        availability: JSON.stringify(seatMapData.availability),
-        passengers: JSON.stringify(seatMapData.passengers)
-      },
-      '*'
-    );
+    const message = {
+      type: 'seatMaps',
+      config: JSON.stringify(seatMapData.config),
+      flight: JSON.stringify(seatMapData.flight),
+      layout: JSON.stringify(seatMapData.layout),
 
-    console.log('📤 SeatMap data sent via postMessage');
+      // не отправляем, пока не полчили эти данные
+      // availability: JSON.stringify(seatMapData.availability),
+      // passengers: JSON.stringify(seatMapData.passengers)
+
+    };
+
+    console.log('📤 postMessage payload:', message);
+    iframe.contentWindow.postMessage(message, '*');
   };
+
+  useEffect(() => {
+    sendToIframe(); // ⬅️ отправка при изменении сегмента
+  }, [segmentIndex]);
 
   return (
     <div style={{ padding: '1rem' }}>
-      <p>✅ SeatMap контейнер загружен</p>
-      <button onClick={sendToIframe}>📤 Отправить данные для отрисовки карты</button>
+
+      {/* окно с данными о рейсе
+       <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#333' }}>
+        <strong>🛫 Flight debug:</strong>
+        <pre>{JSON.stringify(flight, null, 2)}</pre>
+      </div> */}
+
+      <div style = {{marginBottom: '1rem'}}>
+        <label htmlFor="segmentSelect">Выберите сегмент: </label>
+        <select
+          id="segmentSelect"
+          value={segmentIndex}
+          onChange={(e) => setSegmentIndex(Number(e.target.value))}>
+          {flightSegments.map((segment: any, index: number) => (
+            <option key={index} value={index}>
+              {segment.MarketingAirline?.EncodeDecodeElement?.Code || 'XX'} {segment.FlightNumber || '000'}
+              &nbsp;→&nbsp;
+              {segment.OriginLocation?.EncodeDecodeElement?.Code || '???'} –
+              {segment.DestinationLocation?.EncodeDecodeElement?.Code || '???'}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* <button onClick={sendToIframe} style={{ margin: '1rem 0' }}>
+        🔁 Отправить данные вручную
+      </button> */}
+
       <iframe
         ref={iframeRef}
-        src="https://quicket.io/react-proxy-app/" // приходит механизм "отрисовки" и обмена данными 
-        // src="localhost:3000" - npm start
+        src="https://quicket.io/react-proxy-app/"
         width="100%"
         height="800"
-        style={{ border: '1px solid #ccc', marginTop: '1rem' }}
+        style={{ border: '1px solid #ccc' }}
         title="SeatMapIframe"
+        onLoad={() => {
+          console.log('✅ iframe loaded, sending data...');
+          sendToIframe();
+        }}
       />
     </div>
   );

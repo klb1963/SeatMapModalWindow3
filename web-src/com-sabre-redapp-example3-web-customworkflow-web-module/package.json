@@ -14,6 +14,7 @@
     "sabre-ngv-custom-forms": "*",
     "sabre-ngv-commsg": "*",
     "sabre-ngv-redAppSidePanel": "*",
+    "sabre-ngv-airAvailability": "*",
     "sabre-ngv-pos-cdm": "*",
     "sabre-ngv-modals": "*",
     "sabre-ngv-notification": "*"
@@ -26,6 +27,7 @@
       "sabre-ngv-custom-forms": "*",
       "sabre-ngv-commsg": "*",
       "sabre-ngv-redAppSidePanel": "*",
+      "sabre-ngv-airAvailability": "*",
       "sabre-ngv-pos-cdm": "*",
       "sabre-ngv-modals": "*",
       "sabre-ngv-notification": "*"

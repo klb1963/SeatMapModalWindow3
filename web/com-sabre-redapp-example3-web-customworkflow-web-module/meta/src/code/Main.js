@@ -16,6 +16,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Main = void 0;
+var React = require("react");
 var Context_1 = require("./Context");
 var ExtensionPointService_1 = require("sabre-ngv-xp/services/ExtensionPointService");
 var Module_1 = require("sabre-ngv-core/modules/Module");
@@ -31,7 +32,10 @@ var showBanners_1 = require("./components/showBanners");
 var refreshTripSummary_1 = require("./components/refreshTripSummary");
 var callExternalService_1 = require("./components/callExternalService");
 var createNotificationForm_1 = require("./components/createNotificationForm");
-var showSeatMapModal_1 = require("./components/abc-seatmap/showSeatMapModal");
+var PublicAirAvailabilityService_1 = require("sabre-ngv-airAvailability/services/PublicAirAvailabilityService");
+var SeatMapAvailTile_1 = require("./components/abc-seatmap/widgets/SeatMapAvailTile"); // ✅ Availability TileWidget
+var SeatMapAvailView_1 = require("./components/abc-seatmap/widgets/SeatMapAvailView"); // ✅ модальное окно открываемое по клику на TileWidget
+var PublicModalService_1 = require("sabre-ngv-modals/services/PublicModalService");
 var Main = /** @class */ (function (_super) {
     __extends(Main, _super);
     function Main() {
@@ -41,6 +45,7 @@ var Main = /** @class */ (function (_super) {
         _super.prototype.init.call(this);
         this.registerServices();
         this.setup();
+        this.registerSeatMapAvailTile(); // 👈 add Availability TileWidget
     };
     Main.prototype.registerServices = function () {
         (0, Context_1.registerService)(CustomWorkflowService_1.CustomWorkflowService);
@@ -62,9 +67,22 @@ var Main = /** @class */ (function (_super) {
             new RedAppSidePanelButton_1.RedAppSidePanelButton('Create notification', baseCssClassNames + '-createNotification', createNotificationForm_1.createNotificationForm),
             new RedAppSidePanelButton_1.RedAppSidePanelButton('Hide notifications', baseCssClassNames + '-hideNotification', createNotificationForm_1.hideNotifications),
             selfRemoveBtn,
-            new RedAppSidePanelButton_1.RedAppSidePanelButton('Open ABC SeatMap', baseCssClassNames + '-showSeatMap', showSeatMapModal_1.showSeatMapModal),
+            // new RedAppSidePanelButton('Open ABC SeatMap', baseCssClassNames + '-showSeatMap', showSeatMapModal),
         ]);
         (0, Context_1.getService)(ExtensionPointService_1.ExtensionPointService).addConfig('redAppSidePanel', config);
+    };
+    Main.prototype.registerSeatMapAvailTile = function () {
+        var airAvailabilityService = (0, Context_1.getService)(PublicAirAvailabilityService_1.PublicAirAvailabilityService);
+        var showSeatMapAvailabilityModal = function (data) {
+            var modalOptions = {
+                header: 'ABC Seat Map',
+                component: React.createElement(SeatMapAvailView_1.SeatMapAvailView, data),
+                modalClassName: 'react-tile-modal-class'
+            };
+            (0, Context_1.getService)(PublicModalService_1.PublicModalsService).showReactModal(modalOptions);
+        };
+        airAvailabilityService.createAirAvailabilitySearchTile(SeatMapAvailTile_1.SeatMapAvailTile, showSeatMapAvailabilityModal, 'ABC Seat Map' // ✅ заголовок виджета
+        );
     };
     return Main;
 }(Module_1.Module));

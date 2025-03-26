@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {getService, registerService} from './Context';
 import {ExtensionPointService} from 'sabre-ngv-xp/services/ExtensionPointService';
 import {Module} from 'sabre-ngv-core/modules/Module';
@@ -15,12 +16,19 @@ import {callExternalService} from './components/callExternalService';
 import {createNotificationForm, hideNotifications} from "./components/createNotificationForm";
 import {showSeatMapModal} from './components/abc-seatmap/showSeatMapModal';
 
+import {PublicAirAvailabilityService} from 'sabre-ngv-airAvailability/services/PublicAirAvailabilityService';
+import {SeatMapAvailTile} from './components/abc-seatmap/widgets/SeatMapAvailTile'; // ✅ Availability TileWidget
+import {SeatMapAvailView} from './components/abc-seatmap/widgets/SeatMapAvailView';   // ✅ модальное окно открываемое по клику на TileWidget
+import {ReactModalOptions} from 'sabre-ngv-modals/components/PublicReactModal/ReactModalOptions';
+import {PublicModalsService} from 'sabre-ngv-modals/services/PublicModalService';
+
 export class Main extends Module {
 
     init(): void {
         super.init();
         this.registerServices();
         this.setup();
+        this.registerSeatMapAvailTile(); // 👈 add Availability TileWidget
     }
 
     private registerServices(): void {
@@ -47,9 +55,31 @@ export class Main extends Module {
             new RedAppSidePanelButton('Create notification', baseCssClassNames + '-createNotification', createNotificationForm),
             new RedAppSidePanelButton('Hide notifications', baseCssClassNames + '-hideNotification', hideNotifications),
             selfRemoveBtn,
-            new RedAppSidePanelButton('Open ABC SeatMap', baseCssClassNames + '-showSeatMap', showSeatMapModal),
+            // new RedAppSidePanelButton('Open ABC SeatMap', baseCssClassNames + '-showSeatMap', showSeatMapModal),
         ]);
 
         getService(ExtensionPointService).addConfig('redAppSidePanel', config);
     }
+
+    private registerSeatMapAvailTile(): void {
+
+        const airAvailabilityService: PublicAirAvailabilityService = getService(PublicAirAvailabilityService);
+    
+        const showSeatMapAvailabilityModal = (data: any) => {
+            const modalOptions: ReactModalOptions = {
+                header: 'ABC Seat Map',
+                component: React.createElement(SeatMapAvailView, data),
+                modalClassName: 'react-tile-modal-class'
+            };
+    
+            getService(PublicModalsService).showReactModal(modalOptions);
+        };
+    
+        airAvailabilityService.createAirAvailabilitySearchTile(
+            SeatMapAvailTile,
+            showSeatMapAvailabilityModal,
+            'ABC Seat Map' // ✅ заголовок виджета
+        );
+    }
+
 }

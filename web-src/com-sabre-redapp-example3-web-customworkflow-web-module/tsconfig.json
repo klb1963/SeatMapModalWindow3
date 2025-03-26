@@ -29,7 +29,12 @@
     "moduleResolution": "node",
     "keyofStringsOnly": true,
     "preserveSymlinks": true,
-    "paths": {}
+    "paths": {
+      "utils/*": ["utils/*"],
+      "mock/*": ["mock/*"],
+      "components/*": ["components/*"],
+      "services/*": ["services/*"]
+    }
   },
   "include": [
     "./src/code/**/*.ts",
