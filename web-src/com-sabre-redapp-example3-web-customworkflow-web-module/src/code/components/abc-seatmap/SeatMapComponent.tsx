@@ -11,8 +11,14 @@ const SeatMapComponent: React.FC<SeatMapProps> = ({ config, data }) => {
   const [segmentIndex, setSegmentIndex] = useState(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
+  // 🔍 Логим входящие данные
+  console.log('🔹 [SeatMapComponent] received props:', { config, data });
+
   const flight = getFlightFromSabreData(data, segmentIndex); // это рейс с сегментом
   const flightSegments = data.flightSegments || [];
+
+  // 🔍 Логим сформированный flight
+  console.log('✈️ [SeatMapComponent] parsed flight:', flight);
 
   const seatMapData = {
     config,
@@ -52,30 +58,30 @@ const SeatMapComponent: React.FC<SeatMapProps> = ({ config, data }) => {
       flight: JSON.stringify(seatMapData.flight),
       layout: JSON.stringify(seatMapData.layout),
 
-      // не отправляем, пока не полчили эти данные
+      // можно раскомментировать при необходимости
       // availability: JSON.stringify(seatMapData.availability),
       // passengers: JSON.stringify(seatMapData.passengers)
-
     };
 
-    console.log('📤 postMessage payload:', message);
+    console.log('📤 [SeatMapComponent] sending to iframe:', message);
     iframe.contentWindow.postMessage(message, '*');
   };
 
   useEffect(() => {
-    sendToIframe(); // ⬅️ отправка при изменении сегмента
+    console.log('🛠️ SeatMapComponent mounted');
+    console.log(`🔄 Segment index changed: ${segmentIndex}`);
+    sendToIframe(); // отправка при изменении сегмента
   }, [segmentIndex]);
 
   return (
     <div style={{ padding: '1rem' }}>
-
-      {/* окно с данными о рейсе
-       <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#333' }}>
-        <strong>🛫 Flight debug:</strong>
+      {/* окно с данными о рейсе */}
+      <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#333' }}>
+        <strong>🛫 Flight info:</strong>
         <pre>{JSON.stringify(flight, null, 2)}</pre>
-      </div> */}
+      </div>
 
-      <div style = {{marginBottom: '1rem'}}>
+      <div style={{ marginBottom: '1rem' }}>
         <label htmlFor="segmentSelect">Выберите сегмент: </label>
         <select
           id="segmentSelect"
@@ -92,10 +98,6 @@ const SeatMapComponent: React.FC<SeatMapProps> = ({ config, data }) => {
         </select>
       </div>
 
-      {/* <button onClick={sendToIframe} style={{ margin: '1rem 0' }}>
-        🔁 Отправить данные вручную
-      </button> */}
-
       <iframe
         ref={iframeRef}
         src="https://quicket.io/react-proxy-app/"
@@ -104,7 +106,7 @@ const SeatMapComponent: React.FC<SeatMapProps> = ({ config, data }) => {
         style={{ border: '1px solid #ccc' }}
         title="SeatMapIframe"
         onLoad={() => {
-          console.log('✅ iframe loaded, sending data...');
+          console.log('✅ [SeatMapComponent] iframe loaded, sending data...');
           sendToIframe();
         }}
       />

@@ -7,8 +7,12 @@ var SeatMapComponent = function (_a) {
     var config = _a.config, data = _a.data;
     var _b = (0, react_1.useState)(0), segmentIndex = _b[0], setSegmentIndex = _b[1];
     var iframeRef = (0, react_1.useRef)(null);
+    // 🔍 Логим входящие данные
+    console.log('🔹 [SeatMapComponent] received props:', { config: config, data: data });
     var flight = (0, getFlightFromSabreData_1.getFlightFromSabreData)(data, segmentIndex); // это рейс с сегментом
     var flightSegments = data.flightSegments || [];
+    // 🔍 Логим сформированный flight
+    console.log('✈️ [SeatMapComponent] parsed flight:', flight);
     var seatMapData = {
         config: config,
         flight: flight,
@@ -44,17 +48,22 @@ var SeatMapComponent = function (_a) {
             config: JSON.stringify(seatMapData.config),
             flight: JSON.stringify(seatMapData.flight),
             layout: JSON.stringify(seatMapData.layout),
-            // не отправляем, пока не полчили эти данные
+            // можно раскомментировать при необходимости
             // availability: JSON.stringify(seatMapData.availability),
             // passengers: JSON.stringify(seatMapData.passengers)
         };
-        console.log('📤 postMessage payload:', message);
+        console.log('📤 [SeatMapComponent] sending to iframe:', message);
         iframe.contentWindow.postMessage(message, '*');
     };
     (0, react_1.useEffect)(function () {
-        sendToIframe(); // ⬅️ отправка при изменении сегмента
+        console.log('🛠️ SeatMapComponent mounted');
+        console.log("\uD83D\uDD04 Segment index changed: " + segmentIndex);
+        sendToIframe(); // отправка при изменении сегмента
     }, [segmentIndex]);
     return (React.createElement("div", { style: { padding: '1rem' } },
+        React.createElement("div", { style: { marginBottom: '1rem', fontSize: '0.9rem', color: '#333' } },
+            React.createElement("strong", null, "\uD83D\uDEEB Flight info:"),
+            React.createElement("pre", null, JSON.stringify(flight, null, 2))),
         React.createElement("div", { style: { marginBottom: '1rem' } },
             React.createElement("label", { htmlFor: "segmentSelect" }, "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0435\u0433\u043C\u0435\u043D\u0442: "),
             React.createElement("select", { id: "segmentSelect", value: segmentIndex, onChange: function (e) { return setSegmentIndex(Number(e.target.value)); } }, flightSegments.map(function (segment, index) {
@@ -69,7 +78,7 @@ var SeatMapComponent = function (_a) {
                     ((_f = (_e = segment.DestinationLocation) === null || _e === void 0 ? void 0 : _e.EncodeDecodeElement) === null || _f === void 0 ? void 0 : _f.Code) || '???'));
             }))),
         React.createElement("iframe", { ref: iframeRef, src: "https://quicket.io/react-proxy-app/", width: "100%", height: "800", style: { border: '1px solid #ccc' }, title: "SeatMapIframe", onLoad: function () {
-                console.log('✅ iframe loaded, sending data...');
+                console.log('✅ [SeatMapComponent] iframe loaded, sending data...');
                 sendToIframe();
             } })));
 };
