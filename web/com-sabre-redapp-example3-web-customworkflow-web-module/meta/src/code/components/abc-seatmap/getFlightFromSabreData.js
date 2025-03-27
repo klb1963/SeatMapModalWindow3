@@ -20,7 +20,7 @@ var getFlightFromSabreData = function (data, segmentIndex) {
     var departureDateTime = segment.DepartureDateTime;
     var departureDate = departureDateTime.split('T')[0]; // Оставляем только дату
     return {
-        id: '111',
+        id: '001',
         airlineCode: (_c = (_b = segment.MarketingAirline) === null || _b === void 0 ? void 0 : _b.EncodeDecodeElement) === null || _c === void 0 ? void 0 : _c.Code,
         flightNo: segment.FlightNumber,
         departureDate: departureDate,

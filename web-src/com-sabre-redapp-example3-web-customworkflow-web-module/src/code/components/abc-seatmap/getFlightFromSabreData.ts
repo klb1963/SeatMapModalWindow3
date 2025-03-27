@@ -18,7 +18,7 @@ export const getFlightFromSabreData = (data: any, segmentIndex: number = 0) => {
   const departureDate = departureDateTime.split('T')[0]; // Оставляем только дату
 
   return {
-    id: '111', // Можно позже сгенерировать ID иначе
+    id: '001', // Можно позже сгенерировать ID иначе
     airlineCode: segment.MarketingAirline?.EncodeDecodeElement?.Code,
     flightNo: segment.FlightNumber,
     departureDate,
@@ -26,4 +26,5 @@ export const getFlightFromSabreData = (data: any, segmentIndex: number = 0) => {
     arrival: segment.DestinationLocation?.EncodeDecodeElement?.Code,
     cabinClass: 'A' // Пока фиксировано, можно расширить
   };
+
 };

@@ -11,13 +11,13 @@ const SeatMapComponent: React.FC<SeatMapProps> = ({ config, data }) => {
   const [segmentIndex, setSegmentIndex] = useState(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // 🔍 Логим входящие данные
+  // 🔍 Логируем входящие данные
   console.log('🔹 [SeatMapComponent] received props:', { config, data });
 
   const flight = getFlightFromSabreData(data, segmentIndex); // это рейс с сегментом
   const flightSegments = data.flightSegments || [];
 
-  // 🔍 Логим сформированный flight
+  // 🔍 Логируем сформированный flight
   console.log('✈️ [SeatMapComponent] parsed flight:', flight);
 
   const seatMapData = {
@@ -61,6 +61,7 @@ const SeatMapComponent: React.FC<SeatMapProps> = ({ config, data }) => {
       // можно раскомментировать при необходимости
       // availability: JSON.stringify(seatMapData.availability),
       // passengers: JSON.stringify(seatMapData.passengers)
+
     };
 
     console.log('📤 [SeatMapComponent] sending to iframe:', message);

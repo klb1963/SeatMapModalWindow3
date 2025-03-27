@@ -41,7 +41,7 @@
     "./src/code/**/*.tsx",
     "./node_modules/*/module.d.ts",
     "./node_modules/*/module-protected.d.ts",
-    "./src/tests/jest/**/*.ts",
+    "./src/tests/jest/**/*.ts", "src/code/components/abc-seatmap/widgets/SeatMapShoppingTile.ts", "src/code/components/abc-seatmap/widgets/SeatMapShoppingView.ts",
   ],
   "exclude": [
     "./node_modules/sabre-ngv-skeleton/**/*"

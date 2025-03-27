@@ -33,15 +33,15 @@ var refreshTripSummary_1 = require("./components/refreshTripSummary");
 var callExternalService_1 = require("./components/callExternalService");
 var createNotificationForm_1 = require("./components/createNotificationForm");
 var PublicAirAvailabilityService_1 = require("sabre-ngv-airAvailability/services/PublicAirAvailabilityService");
-var SeatMapAvailTile_1 = require("./components/abc-seatmap/widgets/SeatMapAvailTile"); // ✅ Availability TileWidget
-var SeatMapAvailView_1 = require("./components/abc-seatmap/widgets/SeatMapAvailView"); // ✅ модальное окно, открываемое по клику на TileWidget
+var SeatMapAvailTile_1 = require("./components/abc-seatmap/widgets/SeatMapAvailTile");
+var SeatMapAvailView_1 = require("./components/abc-seatmap/widgets/SeatMapAvailView");
 var PublicModalService_1 = require("sabre-ngv-modals/services/PublicModalService");
 var DrawerService_1 = require("sabre-ngv-app/app/services/impl/DrawerService");
 var LargeWidgetDrawerConfig_1 = require("sabre-ngv-core/configs/drawer/LargeWidgetDrawerConfig");
 var Tile_1 = require("sabre-ngv-app/app/widgets/drawer/views/elements/Tile");
 var AbstractView_1 = require("sabre-ngv-app/app/AbstractView");
-var SeatMapComponent_1 = require("./components/abc-seatmap/SeatMapComponent");
 var quicketConfig_1 = require("./components/abc-seatmap/quicketConfig");
+var SeatMapComponent_1 = require("./components/abc-seatmap/SeatMapComponent");
 var Main = /** @class */ (function (_super) {
     __extends(Main, _super);
     function Main() {
@@ -50,15 +50,15 @@ var Main = /** @class */ (function (_super) {
     Main.prototype.init = function () {
         _super.prototype.init.call(this);
         this.registerServices();
-        this.setup();
-        this.registerSeatMapAvailTile(); // 👈 add Availability TileWidget
-        this.registerSeatMapShoppingTile(); // 👈 add Shopping TileWidget
-        this.registerSeatMapShoppingWidget(); // 👈 add Shopping Widget (открывает карту)
+        this.setupSidePanelButtons();
+        this.registerSeatMapAvailTile();
+        this.registerSeatMapShoppingTile();
+        this.registerSeatMapShoppingWidget();
     };
     Main.prototype.registerServices = function () {
         (0, Context_1.registerService)(CustomWorkflowService_1.CustomWorkflowService);
     };
-    Main.prototype.setup = function () {
+    Main.prototype.setupSidePanelButtons = function () {
         var baseCssClassNames = 'btn btn-secondary side-panel-button redapp-web-customworkflow';
         var selfRemoveBtn = new RedAppSidePanelButton_1.RedAppSidePanelButton('Removable Button', baseCssClassNames + '-remove', function () {
             selfRemoveBtn.setVisible(false);
@@ -74,74 +74,69 @@ var Main = /** @class */ (function (_super) {
             new RedAppSidePanelButton_1.RedAppSidePanelButton('Refresh Trip Summary', baseCssClassNames + '-refreshtrip', refreshTripSummary_1.refreshTripSummary),
             new RedAppSidePanelButton_1.RedAppSidePanelButton('Create notification', baseCssClassNames + '-createNotification', createNotificationForm_1.createNotificationForm),
             new RedAppSidePanelButton_1.RedAppSidePanelButton('Hide notifications', baseCssClassNames + '-hideNotification', createNotificationForm_1.hideNotifications),
-            selfRemoveBtn,
-            // new RedAppSidePanelButton('Open ABC SeatMap', baseCssClassNames + '-showSeatMap', showSeatMapModal),
+            selfRemoveBtn
         ]);
         (0, Context_1.getService)(ExtensionPointService_1.ExtensionPointService).addConfig('redAppSidePanel', config);
     };
+    // AvailabilityTile
     Main.prototype.registerSeatMapAvailTile = function () {
-        var airAvailabilityService = (0, Context_1.getService)(PublicAirAvailabilityService_1.PublicAirAvailabilityService);
+        var airAvailabilityService = (0, Context_1.getService)(PublicAirAvailabilityService_1.PublicAirAvailabilityService); // внутренний сервис для предоставления данных в рамках Availability
         var showSeatMapAvailabilityModal = function (data) {
             var modalOptions = {
-                header: 'ABC Seat Map',
+                header: 'ABC SeatMap (Availability)',
                 component: React.createElement(SeatMapAvailView_1.SeatMapAvailView, data),
                 modalClassName: 'react-tile-modal-class'
             };
             (0, Context_1.getService)(PublicModalService_1.PublicModalsService).showReactModal(modalOptions);
         };
-        airAvailabilityService.createAirAvailabilitySearchTile(SeatMapAvailTile_1.SeatMapAvailTile, showSeatMapAvailabilityModal, 'ABC Seat Map' // ✅ заголовок виджета
-        );
+        airAvailabilityService.createAirAvailabilitySearchTile(SeatMapAvailTile_1.SeatMapAvailTile, showSeatMapAvailabilityModal, 'ABC SeatMap');
     };
+    // ShoppingTile
     Main.prototype.registerSeatMapShoppingTile = function () {
-        var drawerService = (0, Context_1.getService)(DrawerService_1.DrawerService);
-        // Создаём функцию для отображения модального окна
+        var drawerService = (0, Context_1.getService)(DrawerService_1.DrawerService); // внутренний сервис для предоставления данных
         var showSeatMapShoppingModal = function (segment) {
             var _a;
-            console.log('🟢 [Modal] Segment passed to modal:', segment);
             var data = {
                 flightSegments: [segment],
                 dateOfFlight: (_a = segment.getDepartureDate()) === null || _a === void 0 ? void 0 : _a.toISOString().split('T')[0]
             };
-            console.log('📦 [Modal] Data for SeatMapComponent:', data);
             var modalOptions = {
-                header: '🛋️ ABC SeatMap (Shopping)',
+                header: '🛫 ABC SeatMap (Tile)',
                 component: React.createElement(SeatMapComponent_1.default, {
                     config: quicketConfig_1.quicketConfig,
                     data: data
                 }),
                 modalClassName: 'react-tile-modal-class',
-                onHide: function () { return console.log('[🛬 SeatMap Shopping Modal Closed]'); }
+                onHide: function () { return console.log('[🛬 SeatMap Tile Modal Closed]'); }
             };
             (0, Context_1.getService)(PublicModalService_1.PublicModalsService).showReactModal(modalOptions);
         };
-        // Регистрируем плитку и указываем обработчик клика
         var shoppingTileConfig = new LargeWidgetDrawerConfig_1.LargeWidgetDrawerConfig(/** @class */ (function (_super) {
             __extends(class_1, _super);
             function class_1() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
             class_1.prototype.selfDrawerContextModelPropagated = function (segment) {
-                this.setDataContent("<button class=\"btn btn-primary\">\uD83D\uDC40 Show SeatMap</button>");
+                this.setDataContent("<button class=\"btn btn-primary\">Show SeatMap Tile</button>");
             };
             class_1.prototype.onClick = function () {
-                console.log('🟢 [Tile Click] SeatMap clicked');
                 var segment = this.getModel();
-                console.log('📦 [Tile Click] Segment:', segment);
-                showSeatMapShoppingModal(this.getModel());
+                console.log('[🧩 Tile] Segment:', segment);
+                showSeatMapShoppingModal(segment);
             };
             return class_1;
         }(Tile_1.Tile)), /** @class */ (function (_super) {
             __extends(class_2, _super);
-            // View необязателен, можно передать пустую заглушку
             function class_2() {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
             return class_2;
-        }(AbstractView_1.AbstractView)), { title: 'SeatMap Viewer' });
+        }(AbstractView_1.AbstractView)), { title: 'SeatMap Tile Viewer' });
         drawerService.addConfig(['shopping-flight-segment'], shoppingTileConfig);
     };
+    // ShoppingWidget
     Main.prototype.registerSeatMapShoppingWidget = function () {
-        var drawerService = (0, Context_1.getService)(DrawerService_1.DrawerService);
+        var drawerService = (0, Context_1.getService)(DrawerService_1.DrawerService); // внутренний сервис для предоставления данных
         var showSeatMapShoppingModal = function (segment) {
             var _a;
             var data = {
@@ -165,12 +160,11 @@ var Main = /** @class */ (function (_super) {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
             class_3.prototype.selfDrawerContextModelPropagated = function (segment) {
-                this.setDataContent("<button class=\"btn btn-outline-primary\"> \uD83D\uDECB\uFE0F Open SeatMap Viewer</button>");
+                this.setDataContent("<button class=\"btn btn-outline-primary\">\uD83D\uDECB\uFE0F Open SeatMap Widget</button>");
             };
             class_3.prototype.onClick = function () {
-                console.log('🟢 [Tile Click] SeatMap clicked');
-                var segment = this.getModel();
-                console.log('📦 [Tile Click] Segment:', segment);
+                var segment = this.getModel(); // берем из модели текущий сегмент
+                console.log('[🧩 Tile] Segment:', segment);
                 showSeatMapShoppingModal(segment);
             };
             return class_3;
@@ -180,7 +174,7 @@ var Main = /** @class */ (function (_super) {
                 return _super !== null && _super.apply(this, arguments) || this;
             }
             return class_4;
-        }(AbstractView_1.AbstractView)), { title: 'SeatMap Shopping Viewer' });
+        }(AbstractView_1.AbstractView)), { title: 'SeatMap Widget Viewer' });
         drawerService.addConfig(['shopping-flight-segment'], shoppingWidgetTileConfig);
     };
     return Main;

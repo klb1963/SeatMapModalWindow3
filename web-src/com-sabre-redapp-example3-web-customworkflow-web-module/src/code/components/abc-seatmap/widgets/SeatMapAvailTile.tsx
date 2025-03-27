@@ -2,11 +2,6 @@ import * as React from 'react';
 import { PublicAirAvailabilityData } from 'sabre-ngv-airAvailability/services/PublicAirAvailabilityData';
 
 export const SeatMapAvailTile = (data: PublicAirAvailabilityData): React.ReactElement => {
-    
-    // const handleClick = () => {
-    //    //  alert("🚀 Modal should open here!"); // Временный тестовый alert вместо showModal
-    // };
-        // onClick={handleClick}
         
     return (
         <div className={'sdk-seatmap-custom-tile-content'} > 

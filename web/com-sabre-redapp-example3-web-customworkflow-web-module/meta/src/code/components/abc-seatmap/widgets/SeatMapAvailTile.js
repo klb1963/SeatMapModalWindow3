@@ -3,10 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SeatMapAvailTile = void 0;
 var React = require("react");
 var SeatMapAvailTile = function (data) {
-    // const handleClick = () => {
-    //    //  alert("🚀 Modal should open here!"); // Временный тестовый alert вместо showModal
-    // };
-    // onClick={handleClick}
     return (React.createElement("div", { className: 'sdk-seatmap-custom-tile-content' },
         React.createElement("strong", null, "ABC Seat Map"),
         React.createElement("ol", null, data.flightSegments.map(function (segment, index) { return (React.createElement("li", { key: index },

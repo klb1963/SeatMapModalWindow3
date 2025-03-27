@@ -20,4 +20,5 @@ export function showSeatMapModal(data: PublicAirAvailabilityData): void {
   };
 
   modalService.showReactModal(options);
+  
 }
