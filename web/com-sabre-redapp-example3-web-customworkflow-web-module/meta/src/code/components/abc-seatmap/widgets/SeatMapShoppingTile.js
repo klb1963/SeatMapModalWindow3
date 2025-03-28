@@ -33,24 +33,21 @@ var SeatMapShoppingTile = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     SeatMapShoppingTile.prototype.selfDrawerContextModelPropagated = function (cpa) {
-        var itinerary = cpa.getShoppingItinerary();
-        var flightSegments = itinerary.getFlightSegments();
-        var price = itinerary.getPrice();
-        var flightNumbers = flightSegments.map(function (seg) { return seg.getFlightNumber(); });
-        var segmentInfo = flightNumbers.length > 1
-            ? "<div>Segments:<br/>" + flightNumbers.join(', ') + "</div>"
-            : "<div>Segment: " + (flightNumbers[0] || 'N/A') + "</div>";
-        var priceInfo = "<div>Price: " + price + "</div>";
-        this.setDataContent(segmentInfo + priceInfo);
+        var flightNumbers = cpa.getShoppingItinerary().getFlightSegments().map(function (segment) { return segment.getFlightNumber(); });
+        var segmentsHtml = flightNumbers.length > 1
+            ? "<div>Segments:<br />" + flightNumbers.join(', ') + "</div>"
+            : "<div>Segment: " + (flightNumbers.join(', ') || 'N/A') + "</div>";
+        var priceHtml = "<div>Price: " + cpa.getShoppingItinerary().getPrice() + "</div>";
+        this.setDataContent(segmentsHtml + priceHtml);
     };
     SeatMapShoppingTile.prototype.selfSelectedFareChanged = function (cpa) {
         this.selfDrawerContextModelPropagated(cpa);
     };
     SeatMapShoppingTile = __decorate([
-        (0, CssClass_1.CssClass)('com-sabre-redapp-example3-web-customworkflow-web-module', { overwrite: false }),
+        (0, CssClass_1.CssClass)('com-sabre-redapp-example3-web-tilewidgets-web-module', { overwrite: false }),
         (0, Initial_1.Initial)({
-            caption: 'ABC Seat Map (SHOPPING)',
-            className: 'sdk-seatmap-custom-tile'
+            caption: 'Air Shopping',
+            className: 'web-air-shopping-widget-sample'
         }),
         (0, Mixin_1.Mixin)(WithoutFocusOnClick_1.WithoutFocusOnClick)
     ], SeatMapShoppingTile);

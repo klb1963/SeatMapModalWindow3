@@ -34,6 +34,11 @@ import { AbstractModel } from 'sabre-ngv-app/app/AbstractModel';
 import { quicketConfig } from './components/abc-seatmap/quicketConfig';
 import SeatMapComponent from './components/abc-seatmap/SeatMapComponent';
 
+import { SeatMapShoppingTile } from './components/abc-seatmap/widgets/SeatMapShoppingTile';
+import { SeatMapShoppingView } from './components/abc-seatmap/widgets/SeatMapShoppingView';
+
+
+
 export class Main extends Module {
   init(): void {
     super.init();
@@ -41,7 +46,6 @@ export class Main extends Module {
     this.setupSidePanelButtons();
     this.registerSeatMapAvailTile();
     this.registerSeatMapShoppingTile();
-    this.registerSeatMapShoppingWidget();
   }
 
   private registerServices(): void {
@@ -95,85 +99,14 @@ export class Main extends Module {
 
   // ShoppingTile
   private registerSeatMapShoppingTile(): void {
-    const drawerService = getService(DrawerService); // внутренний сервис для предоставления данных
+    // определяем config shoppingDrawerConfig
+    const shoppingDrawerConfig = new LargeWidgetDrawerConfig(SeatMapShoppingTile, SeatMapShoppingView, {
+      title: 'Shopping TileWidget' // заголовок окна
+    });
+    // вызвываем сервис с этим config shoppingDrawerConfig
+    getService(DrawerService).addConfig(['shopping-flight-segment'], shoppingDrawerConfig);
 
-    const showSeatMapShoppingModal = (segment: FlightSegment) => {
-      const data = {
-        flightSegments: [segment],
-        dateOfFlight: segment.getDepartureDate()?.toISOString().split('T')[0]
-      };
-
-      const modalOptions: ReactModalOptions = {
-        header: '🛫 ABC SeatMap (Tile)',
-        component: React.createElement(SeatMapComponent, {
-          config: quicketConfig,
-          data
-        }),
-        modalClassName: 'react-tile-modal-class',
-        onHide: () => console.log('[🛬 SeatMap Tile Modal Closed]')
-      };
-
-      getService(PublicModalsService).showReactModal(modalOptions);
-    };
-
-    const shoppingTileConfig = new LargeWidgetDrawerConfig(
-      class extends Tile<FlightSegment> {
-        selfDrawerContextModelPropagated(segment: FlightSegment) {
-          this.setDataContent(`<button class="btn btn-primary">Show SeatMap Tile</button>`);
-        }
-
-        onClick() {
-          const segment = this.getModel() as FlightSegment;
-          console.log('[🧩 Tile] Segment:', segment);
-          showSeatMapShoppingModal(segment);
-        }
-      },
-      class extends AbstractView<AbstractModel> {},
-      { title: 'SeatMap Tile Viewer' }
-    );
-
-    drawerService.addConfig(['shopping-flight-segment'], shoppingTileConfig);
   }
 
-  // ShoppingWidget
-  private registerSeatMapShoppingWidget(): void {
-    const drawerService = getService(DrawerService); // внутренний сервис для предоставления данных
 
-    const showSeatMapShoppingModal = (segment: FlightSegment) => {
-      const data = {
-        flightSegments: [segment],
-        dateOfFlight: segment.getDepartureDate()?.toISOString().split('T')[0]
-      };
-
-      const modalOptions: ReactModalOptions = {
-        header: '🛋️ ABC SeatMap (Shopping Widget)',
-        component: React.createElement(SeatMapComponent, {
-          config: quicketConfig,
-          data
-        }),
-        modalClassName: 'react-tile-modal-class',
-        onHide: () => console.log('[🛬 SeatMap Shopping Widget Modal Closed]')
-      };
-
-      getService(PublicModalsService).showReactModal(modalOptions);
-    };
-
-    const shoppingWidgetTileConfig = new LargeWidgetDrawerConfig(
-      class extends Tile<FlightSegment> {
-        selfDrawerContextModelPropagated(segment: FlightSegment) {
-          this.setDataContent(`<button class="btn btn-outline-primary">🛋️ Open SeatMap Widget</button>`);
-        }
-
-        onClick() {
-          const segment = this.getModel() as FlightSegment; // берем из модели текущий сегмент
-          console.log('[🧩 Tile] Segment:', segment);
-          showSeatMapShoppingModal(segment);
-        }
-      },
-      class extends AbstractView<AbstractModel> {},
-      { title: 'SeatMap Widget Viewer' }
-    );
-
-    drawerService.addConfig(['shopping-flight-segment'], shoppingWidgetTileConfig);
-  }
 }

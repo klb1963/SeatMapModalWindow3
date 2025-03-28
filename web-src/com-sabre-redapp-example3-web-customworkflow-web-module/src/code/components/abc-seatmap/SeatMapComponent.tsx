@@ -68,6 +68,8 @@ const SeatMapComponent: React.FC<SeatMapProps> = ({ config, data }) => {
     iframe.contentWindow.postMessage(message, '*');
   };
 
+  console.log('🧠 SeatMapComponent is rendering!');
+
   useEffect(() => {
     console.log('🛠️ SeatMapComponent mounted');
     console.log(`🔄 Segment index changed: ${segmentIndex}`);
@@ -75,6 +77,7 @@ const SeatMapComponent: React.FC<SeatMapProps> = ({ config, data }) => {
   }, [segmentIndex]);
 
   return (
+
     <div style={{ padding: '1rem' }}>
       {/* окно с данными о рейсе */}
       <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#333' }}>
@@ -112,7 +115,9 @@ const SeatMapComponent: React.FC<SeatMapProps> = ({ config, data }) => {
         }}
       />
     </div>
+
   );
+
 };
 
 export default SeatMapComponent;

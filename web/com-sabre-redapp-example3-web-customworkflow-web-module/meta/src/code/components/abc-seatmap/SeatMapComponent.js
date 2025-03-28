@@ -55,6 +55,7 @@ var SeatMapComponent = function (_a) {
         console.log('📤 [SeatMapComponent] sending to iframe:', message);
         iframe.contentWindow.postMessage(message, '*');
     };
+    console.log('🧠 SeatMapComponent is rendering!');
     (0, react_1.useEffect)(function () {
         console.log('🛠️ SeatMapComponent mounted');
         console.log("\uD83D\uDD04 Segment index changed: " + segmentIndex);

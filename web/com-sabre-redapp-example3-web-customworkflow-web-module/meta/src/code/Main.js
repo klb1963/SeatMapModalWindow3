@@ -38,10 +38,8 @@ var SeatMapAvailView_1 = require("./components/abc-seatmap/widgets/SeatMapAvailV
 var PublicModalService_1 = require("sabre-ngv-modals/services/PublicModalService");
 var DrawerService_1 = require("sabre-ngv-app/app/services/impl/DrawerService");
 var LargeWidgetDrawerConfig_1 = require("sabre-ngv-core/configs/drawer/LargeWidgetDrawerConfig");
-var Tile_1 = require("sabre-ngv-app/app/widgets/drawer/views/elements/Tile");
-var AbstractView_1 = require("sabre-ngv-app/app/AbstractView");
-var quicketConfig_1 = require("./components/abc-seatmap/quicketConfig");
-var SeatMapComponent_1 = require("./components/abc-seatmap/SeatMapComponent");
+var SeatMapShoppingTile_1 = require("./components/abc-seatmap/widgets/SeatMapShoppingTile");
+var SeatMapShoppingView_1 = require("./components/abc-seatmap/widgets/SeatMapShoppingView");
 var Main = /** @class */ (function (_super) {
     __extends(Main, _super);
     function Main() {
@@ -53,7 +51,6 @@ var Main = /** @class */ (function (_super) {
         this.setupSidePanelButtons();
         this.registerSeatMapAvailTile();
         this.registerSeatMapShoppingTile();
-        this.registerSeatMapShoppingWidget();
     };
     Main.prototype.registerServices = function () {
         (0, Context_1.registerService)(CustomWorkflowService_1.CustomWorkflowService);
@@ -93,89 +90,12 @@ var Main = /** @class */ (function (_super) {
     };
     // ShoppingTile
     Main.prototype.registerSeatMapShoppingTile = function () {
-        var drawerService = (0, Context_1.getService)(DrawerService_1.DrawerService); // внутренний сервис для предоставления данных
-        var showSeatMapShoppingModal = function (segment) {
-            var _a;
-            var data = {
-                flightSegments: [segment],
-                dateOfFlight: (_a = segment.getDepartureDate()) === null || _a === void 0 ? void 0 : _a.toISOString().split('T')[0]
-            };
-            var modalOptions = {
-                header: '🛫 ABC SeatMap (Tile)',
-                component: React.createElement(SeatMapComponent_1.default, {
-                    config: quicketConfig_1.quicketConfig,
-                    data: data
-                }),
-                modalClassName: 'react-tile-modal-class',
-                onHide: function () { return console.log('[🛬 SeatMap Tile Modal Closed]'); }
-            };
-            (0, Context_1.getService)(PublicModalService_1.PublicModalsService).showReactModal(modalOptions);
-        };
-        var shoppingTileConfig = new LargeWidgetDrawerConfig_1.LargeWidgetDrawerConfig(/** @class */ (function (_super) {
-            __extends(class_1, _super);
-            function class_1() {
-                return _super !== null && _super.apply(this, arguments) || this;
-            }
-            class_1.prototype.selfDrawerContextModelPropagated = function (segment) {
-                this.setDataContent("<button class=\"btn btn-primary\">Show SeatMap Tile</button>");
-            };
-            class_1.prototype.onClick = function () {
-                var segment = this.getModel();
-                console.log('[🧩 Tile] Segment:', segment);
-                showSeatMapShoppingModal(segment);
-            };
-            return class_1;
-        }(Tile_1.Tile)), /** @class */ (function (_super) {
-            __extends(class_2, _super);
-            function class_2() {
-                return _super !== null && _super.apply(this, arguments) || this;
-            }
-            return class_2;
-        }(AbstractView_1.AbstractView)), { title: 'SeatMap Tile Viewer' });
-        drawerService.addConfig(['shopping-flight-segment'], shoppingTileConfig);
-    };
-    // ShoppingWidget
-    Main.prototype.registerSeatMapShoppingWidget = function () {
-        var drawerService = (0, Context_1.getService)(DrawerService_1.DrawerService); // внутренний сервис для предоставления данных
-        var showSeatMapShoppingModal = function (segment) {
-            var _a;
-            var data = {
-                flightSegments: [segment],
-                dateOfFlight: (_a = segment.getDepartureDate()) === null || _a === void 0 ? void 0 : _a.toISOString().split('T')[0]
-            };
-            var modalOptions = {
-                header: '🛋️ ABC SeatMap (Shopping Widget)',
-                component: React.createElement(SeatMapComponent_1.default, {
-                    config: quicketConfig_1.quicketConfig,
-                    data: data
-                }),
-                modalClassName: 'react-tile-modal-class',
-                onHide: function () { return console.log('[🛬 SeatMap Shopping Widget Modal Closed]'); }
-            };
-            (0, Context_1.getService)(PublicModalService_1.PublicModalsService).showReactModal(modalOptions);
-        };
-        var shoppingWidgetTileConfig = new LargeWidgetDrawerConfig_1.LargeWidgetDrawerConfig(/** @class */ (function (_super) {
-            __extends(class_3, _super);
-            function class_3() {
-                return _super !== null && _super.apply(this, arguments) || this;
-            }
-            class_3.prototype.selfDrawerContextModelPropagated = function (segment) {
-                this.setDataContent("<button class=\"btn btn-outline-primary\">\uD83D\uDECB\uFE0F Open SeatMap Widget</button>");
-            };
-            class_3.prototype.onClick = function () {
-                var segment = this.getModel(); // берем из модели текущий сегмент
-                console.log('[🧩 Tile] Segment:', segment);
-                showSeatMapShoppingModal(segment);
-            };
-            return class_3;
-        }(Tile_1.Tile)), /** @class */ (function (_super) {
-            __extends(class_4, _super);
-            function class_4() {
-                return _super !== null && _super.apply(this, arguments) || this;
-            }
-            return class_4;
-        }(AbstractView_1.AbstractView)), { title: 'SeatMap Widget Viewer' });
-        drawerService.addConfig(['shopping-flight-segment'], shoppingWidgetTileConfig);
+        // определяем config shoppingDrawerConfig
+        var shoppingDrawerConfig = new LargeWidgetDrawerConfig_1.LargeWidgetDrawerConfig(SeatMapShoppingTile_1.SeatMapShoppingTile, SeatMapShoppingView_1.SeatMapShoppingView, {
+            title: 'Shopping TileWidget' // заголовок окна
+        });
+        // вызвываем сервис с этим config shoppingDrawerConfig
+        (0, Context_1.getService)(DrawerService_1.DrawerService).addConfig(['shopping-flight-segment'], shoppingDrawerConfig);
     };
     return Main;
 }(Module_1.Module));

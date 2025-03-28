@@ -3,6 +3,7 @@
     "target": "ES5",
     "module": "CommonJS",
     "jsx": "react",
+    "jsxFactory": "React.createElement",
     "lib": [
       "ES2020",
       "DOM"
