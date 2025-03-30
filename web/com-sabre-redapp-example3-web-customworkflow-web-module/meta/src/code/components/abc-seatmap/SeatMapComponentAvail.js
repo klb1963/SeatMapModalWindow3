@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var react_1 = require("react");
-var getFlightFromSabreData_1 = require("../abc-seatmap/getFlightFromSabreData");
+var getFlightFromSabreData_1 = require("./getFlightFromSabreData");
 var SeatMapComponent = function (_a) {
     var config = _a.config, data = _a.data;
     var _b = (0, react_1.useState)(0), segmentIndex = _b[0], setSegmentIndex = _b[1];
@@ -13,17 +13,19 @@ var SeatMapComponent = function (_a) {
     var flightSegments = data.flightSegments || [];
     // 🔍 Логируем сформированный flight
     console.log('✈️ [SeatMapComponent] parsed flight:', flight);
+    // flight для проверки
+    // flight:{
+    //   id: '001', 
+    //     airlineCode: 'LH',
+    //     flightNo: '123',
+    //     departureDate: '2025-04-22', 
+    //     departure: 'MUC',
+    //     arrival: 'FRA',
+    //     cabinClass: 'A'
+    // },
     var seatMapData = {
         config: config,
-        flight: {
-            id: '001',
-            airlineCode: 'LH',
-            flightNo: '123',
-            departureDate: '2025-04-22',
-            departure: 'MUC',
-            arrival: 'FRA',
-            cabinClass: 'A'
-        },
+        flight: flight,
         layout: {
             decks: [
                 {

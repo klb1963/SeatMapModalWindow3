@@ -8,7 +8,7 @@ import {CssClass} from 'sabre-ngv-core/decorators/classes/view/CssClass';
 
 @CssClass('com-sabre-redapp-example3-web-tilewidgets-web-module', { overwrite: false })
 @Initial<TileOptions>({
-    caption: 'Air Shopping', // имя tile
+    caption: 'ABC SeatMap', // имя tile
     className: 'web-air-shopping-widget-sample'
 })
 @Mixin(WithoutFocusOnClick)

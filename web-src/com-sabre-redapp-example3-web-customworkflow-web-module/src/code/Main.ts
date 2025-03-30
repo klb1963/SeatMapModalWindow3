@@ -32,7 +32,7 @@ import { AbstractView } from 'sabre-ngv-app/app/AbstractView';
 import { AbstractModel } from 'sabre-ngv-app/app/AbstractModel';
 
 import { quicketConfig } from './components/abc-seatmap/quicketConfig';
-import SeatMapComponent from './components/abc-seatmap/SeatMapComponent';
+import SeatMapComponent from './components/abc-seatmap/SeatMapComponentAvail';
 
 import { SeatMapShoppingTile } from './components/abc-seatmap/widgets/SeatMapShoppingTile';
 import { SeatMapShoppingView } from './components/abc-seatmap/widgets/SeatMapShoppingView';

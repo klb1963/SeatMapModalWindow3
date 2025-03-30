@@ -7,7 +7,7 @@ var showSeatMapModal_1 = require("../../../components/abc-seatmap/showSeatMapMod
 var SeatMapAvailView = function (data) {
     (0, react_1.useEffect)(function () {
         console.log('🚀 SeatMapAvailView data:', data); // лог в онсоль
-        (0, showSeatMapModal_1.showSeatMapModal)(data); // показываем модальное окно
+        (0, showSeatMapModal_1.showSeatMapModal)(data); // вызываем функцию показа модального окна c данными (data)
     }, []);
     return (React.createElement("div", { className: 'sdk-seatmap-custom-tile-content' },
         React.createElement("p", null, "\u041E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u043C SeatMap Viewer...")));

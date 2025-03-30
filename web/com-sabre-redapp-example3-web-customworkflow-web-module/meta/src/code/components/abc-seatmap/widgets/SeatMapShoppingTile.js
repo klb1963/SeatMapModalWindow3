@@ -46,7 +46,7 @@ var SeatMapShoppingTile = /** @class */ (function (_super) {
     SeatMapShoppingTile = __decorate([
         (0, CssClass_1.CssClass)('com-sabre-redapp-example3-web-tilewidgets-web-module', { overwrite: false }),
         (0, Initial_1.Initial)({
-            caption: 'Air Shopping',
+            caption: 'ABC SeatMap',
             className: 'web-air-shopping-widget-sample'
         }),
         (0, Mixin_1.Mixin)(WithoutFocusOnClick_1.WithoutFocusOnClick)

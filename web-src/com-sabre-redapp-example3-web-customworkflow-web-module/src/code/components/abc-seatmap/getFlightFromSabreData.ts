@@ -14,17 +14,32 @@ export const getFlightFromSabreData = (data: any, segmentIndex: number = 0) => {
     };
   }
 
+  console.log('📌 [getFlightFromSabreData] Полные данные сегмента:', JSON.stringify(segment, null, 2));
+
   const departureDateTime = segment.DepartureDateTime;
+
+  if (!departureDateTime) {
+    console.warn('⚠️ [getFlightFromSabreData] DepartureDateTime отсутствует в данных сегмента!');
+    return {
+      id: 'UNKNOWN',
+      airlineCode: segment.MarketingAirline?.EncodeDecodeElement?.Code || '',
+      flightNo: segment.FlightNumber || '',
+      departureDate: '',
+      departure: segment.OriginLocation?.EncodeDecodeElement?.Code || '',
+      arrival: segment.DestinationLocation?.EncodeDecodeElement?.Code || '',
+      cabinClass: ''
+    };
+  }
+
   const departureDate = departureDateTime.split('T')[0]; // Оставляем только дату
 
   return {
-    id: '001', // Можно позже сгенерировать ID иначе
+    id: '001',
     airlineCode: segment.MarketingAirline?.EncodeDecodeElement?.Code,
     flightNo: segment.FlightNumber,
     departureDate,
     departure: segment.OriginLocation?.EncodeDecodeElement?.Code,
     arrival: segment.DestinationLocation?.EncodeDecodeElement?.Code,
-    cabinClass: 'A' // Пока фиксировано, можно расширить
+    cabinClass: 'A'
   };
-
 };

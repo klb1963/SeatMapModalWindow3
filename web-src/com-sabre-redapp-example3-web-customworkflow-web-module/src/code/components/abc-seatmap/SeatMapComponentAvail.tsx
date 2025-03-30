@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { getFlightFromSabreData } from '../abc-seatmap/getFlightFromSabreData';
+import { getFlightFromSabreData } from './getFlightFromSabreData';
 
 interface SeatMapProps {
   config: any;
-  data: any; // вместо flight теперь получаем весь data
+  data: any;
 }
 
 const SeatMapComponent: React.FC<SeatMapProps> = ({ config, data }) => {
@@ -19,6 +19,17 @@ const SeatMapComponent: React.FC<SeatMapProps> = ({ config, data }) => {
 
   // 🔍 Логируем сформированный flight
   console.log('✈️ [SeatMapComponent] parsed flight:', flight);
+  
+  // flight для проверки
+  // flight:{
+  //   id: '001', 
+  //     airlineCode: 'LH',
+  //     flightNo: '123',
+  //     departureDate: '2025-04-22', 
+  //     departure: 'MUC',
+  //     arrival: 'FRA',
+  //     cabinClass: 'A'
+  // },
 
   const seatMapData = {
     config,
@@ -63,6 +74,11 @@ const SeatMapComponent: React.FC<SeatMapProps> = ({ config, data }) => {
       // passengers: JSON.stringify(seatMapData.passengers)
 
     };
+
+    console.log('📤 [SeatMapComponent] sending to iframe with data:', {
+      config: JSON.stringify(seatMapData.config),
+      flight: JSON.stringify(seatMapData.flight),
+  });
 
     console.log('📤 [SeatMapComponent] sending to iframe:', message);
     iframe.contentWindow.postMessage(message, '*');

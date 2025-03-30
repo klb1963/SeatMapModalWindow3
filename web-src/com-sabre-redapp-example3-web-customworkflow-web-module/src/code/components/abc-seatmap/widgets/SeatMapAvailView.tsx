@@ -6,7 +6,7 @@ import { showSeatMapModal } from '../../../components/abc-seatmap/showSeatMapMod
 export const SeatMapAvailView = (data: PublicAirAvailabilityData): React.ReactElement => {
     useEffect(() => {
       console.log('🚀 SeatMapAvailView data:', data); // лог в онсоль
-      showSeatMapModal(data); // показываем модальное окно
+      showSeatMapModal(data); // вызываем функцию показа модального окна c данными (data)
     }, []);
   
     return (
