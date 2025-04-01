@@ -41,7 +41,7 @@ export class SeatMapShoppingTile extends Tile<FlightSegment> implements WithoutF
                 font-size: 12px;
                 height: 24px;
             ">
-                ABC SeatMap
+                ABC Seat Map
             </button>
         </div>
     `;

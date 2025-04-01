@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { AirPricingData } from 'sabre-ngv-pricing/response/interfaces/AirPricingData';
 import { showSeatMapPricingModal } from '../../../components/abc-seatmap/showSeatMapPricingModal';
 
+// TODO корректный выбор сегмента
+
 export const PricingView = (data: AirPricingData) : React.ReactElement => {
     useEffect(() => {
         console.log('🚀 PricingView data:', data); // Лог для отладки

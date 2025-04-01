@@ -4,6 +4,7 @@ exports.PricingView = void 0;
 var React = require("react");
 var react_1 = require("react");
 var showSeatMapPricingModal_1 = require("../../../components/abc-seatmap/showSeatMapPricingModal");
+// TODO корректный выбор сегмента
 var PricingView = function (data) {
     (0, react_1.useEffect)(function () {
         console.log('🚀 PricingView data:', data); // Лог для отладки
