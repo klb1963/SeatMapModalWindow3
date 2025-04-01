@@ -5,6 +5,8 @@ import { ReactModalOptions } from 'sabre-ngv-modals/components/PublicReactModal/
 import SeatMapComponent from './SeatMapComponentAvail';
 import { quicketConfig } from './quicketConfig'; // config с настройками отображения карты
 
+// data: SeatMapShoppingData
+
 interface SeatMapShoppingData {
     flightSegments: any[];  // Можно заменить на конкретный тип, если известен
 }

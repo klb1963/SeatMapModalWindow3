@@ -2,17 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var react_1 = require("react");
-var getFlightFromSabreData_1 = require("./getFlightFromSabreData");
-var SeatMapComponentAvail = function (_a) {
+var SeatMapComponentPricing = function (_a) {
     var config = _a.config, data = _a.data;
     var _b = (0, react_1.useState)(0), segmentIndex = _b[0], setSegmentIndex = _b[1];
     var iframeRef = (0, react_1.useRef)(null);
     // 🔍 Логируем входящие данные
     console.log('🔹 [SeatMapComponent] received props:', { config: config, data: data });
-    var flight = (0, getFlightFromSabreData_1.getFlightFromSabreData)(data, segmentIndex); // это рейс с сегментом
+    // Получаем текущий сегмент
     var flightSegments = data.flightSegments || [];
+    var currentSegment = flightSegments[segmentIndex] || {};
     // 🔍 Логируем сформированный flight
-    console.log('✈️ [SeatMapComponent] parsed flight:', flight);
+    console.log('✈️ [SeatMapComponent] parsed flight:', flightSegments);
     // flight для проверки
     // flight:{
     //   id: '001', 
@@ -25,7 +25,15 @@ var SeatMapComponentAvail = function (_a) {
     // },
     var seatMapData = {
         config: config,
-        flight: flight,
+        flight: {
+            id: '001',
+            airlineCode: currentSegment.marketingAirline || 'LH',
+            flightNo: currentSegment.flightNumber || '123',
+            departureDate: currentSegment.departureDateTime || '2025-04-22',
+            departure: currentSegment.origin || 'MUC',
+            arrival: currentSegment.destination || 'FRA',
+            cabinClass: currentSegment.cabinClass || 'A'
+        },
         layout: {
             decks: [
                 {
@@ -78,7 +86,7 @@ var SeatMapComponentAvail = function (_a) {
     return (React.createElement("div", { style: { padding: '1rem' } },
         React.createElement("div", { style: { marginBottom: '1rem', fontSize: '0.9rem', color: '#333' } },
             React.createElement("strong", null, "\uD83D\uDEEB Flight info:"),
-            React.createElement("pre", null, JSON.stringify(flight, null, 2))),
+            React.createElement("pre", null, JSON.stringify(currentSegment, null, 2))),
         React.createElement("div", { style: { marginBottom: '1rem' } },
             React.createElement("label", { htmlFor: "segmentSelect" }, "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0435\u0433\u043C\u0435\u043D\u0442: "),
             React.createElement("select", { id: "segmentSelect", value: segmentIndex, onChange: function (e) { return setSegmentIndex(Number(e.target.value)); } }, flightSegments.map(function (segment, index) {
@@ -97,4 +105,4 @@ var SeatMapComponentAvail = function (_a) {
                 sendToIframe();
             } })));
 };
-exports.default = SeatMapComponentAvail;
+exports.default = SeatMapComponentPricing;

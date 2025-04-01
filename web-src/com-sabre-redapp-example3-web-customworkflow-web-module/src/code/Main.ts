@@ -26,17 +26,12 @@ import { PublicModalsService } from 'sabre-ngv-modals/services/PublicModalServic
 import { DrawerService } from 'sabre-ngv-app/app/services/impl/DrawerService';
 import { LargeWidgetDrawerConfig } from 'sabre-ngv-core/configs/drawer/LargeWidgetDrawerConfig';
 
-import { FlightSegment } from 'sabre-ngv-app/app/common/data/flight/FlightSegment';
-import { Tile } from 'sabre-ngv-app/app/widgets/drawer/views/elements/Tile';
-import { AbstractView } from 'sabre-ngv-app/app/AbstractView';
-import { AbstractModel } from 'sabre-ngv-app/app/AbstractModel';
-
-import { quicketConfig } from './components/abc-seatmap/quicketConfig';
-import SeatMapComponent from './components/abc-seatmap/SeatMapComponentAvail';
-
 import { SeatMapShoppingTile } from './components/abc-seatmap/widgets/SeatMapShoppingTile';
 import { SeatMapShoppingView } from './components/abc-seatmap/widgets/SeatMapShoppingView';
 
+import { IAirPricingService } from 'sabre-ngv-pricing/services/IAirPricingService';
+import { PricingTile } from './components/abc-seatmap/widgets/PricingTile';
+import { PricingView } from './components/abc-seatmap/widgets/PricingView';
 
 
 export class Main extends Module {
@@ -97,15 +92,33 @@ export class Main extends Module {
     );
   }
 
-  // ShoppingTile
+  // ShoppingTile 
   private registerSeatMapShoppingTile(): void {
     // определяем config shoppingDrawerConfig
     const shoppingDrawerConfig = new LargeWidgetDrawerConfig(SeatMapShoppingTile, SeatMapShoppingView, {
-      title: 'Shopping TileWidget' // заголовок окна
+      title: 'Shopping Tile Widget' // заголовок окна
     });
     // вызвываем сервис с этим config shoppingDrawerConfig
     getService(DrawerService).addConfig(['shopping-flight-segment'], shoppingDrawerConfig);
 
+    // Pricing Tile
+    const showPricingModal = this.createShowModalAction(PricingView, 'Pricing Data');
+    getService(IAirPricingService).createPricingTile(PricingTile, showPricingModal, 'ABC Seat Map');
+
+  }
+
+  private createShowModalAction(view: React.FunctionComponent<any>, header: string): (data: any) => void {
+    return ((data) => {
+      const ngvModalOptions: ReactModalOptions = {
+        header,
+        component: React.createElement(
+          view,
+          data
+        ),
+        modalClassName: 'react-tile-modal-class'
+      }
+      getService(PublicModalsService).showReactModal(ngvModalOptions);
+    })
   }
 
 

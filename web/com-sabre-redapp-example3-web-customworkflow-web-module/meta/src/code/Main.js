@@ -40,6 +40,9 @@ var DrawerService_1 = require("sabre-ngv-app/app/services/impl/DrawerService");
 var LargeWidgetDrawerConfig_1 = require("sabre-ngv-core/configs/drawer/LargeWidgetDrawerConfig");
 var SeatMapShoppingTile_1 = require("./components/abc-seatmap/widgets/SeatMapShoppingTile");
 var SeatMapShoppingView_1 = require("./components/abc-seatmap/widgets/SeatMapShoppingView");
+var IAirPricingService_1 = require("sabre-ngv-pricing/services/IAirPricingService");
+var PricingTile_1 = require("./components/abc-seatmap/widgets/PricingTile");
+var PricingView_1 = require("./components/abc-seatmap/widgets/PricingView");
 var Main = /** @class */ (function (_super) {
     __extends(Main, _super);
     function Main() {
@@ -88,14 +91,27 @@ var Main = /** @class */ (function (_super) {
         };
         airAvailabilityService.createAirAvailabilitySearchTile(SeatMapAvailTile_1.SeatMapAvailTile, showSeatMapAvailabilityModal, 'ABC SeatMap');
     };
-    // ShoppingTile
+    // ShoppingTile 
     Main.prototype.registerSeatMapShoppingTile = function () {
         // определяем config shoppingDrawerConfig
         var shoppingDrawerConfig = new LargeWidgetDrawerConfig_1.LargeWidgetDrawerConfig(SeatMapShoppingTile_1.SeatMapShoppingTile, SeatMapShoppingView_1.SeatMapShoppingView, {
-            title: 'Shopping TileWidget' // заголовок окна
+            title: 'Shopping Tile Widget' // заголовок окна
         });
         // вызвываем сервис с этим config shoppingDrawerConfig
         (0, Context_1.getService)(DrawerService_1.DrawerService).addConfig(['shopping-flight-segment'], shoppingDrawerConfig);
+        // Pricing Tile
+        var showPricingModal = this.createShowModalAction(PricingView_1.PricingView, 'Pricing Data');
+        (0, Context_1.getService)(IAirPricingService_1.IAirPricingService).createPricingTile(PricingTile_1.PricingTile, showPricingModal, 'ABC Seat Map');
+    };
+    Main.prototype.createShowModalAction = function (view, header) {
+        return (function (data) {
+            var ngvModalOptions = {
+                header: header,
+                component: React.createElement(view, data),
+                modalClassName: 'react-tile-modal-class'
+            };
+            (0, Context_1.getService)(PublicModalService_1.PublicModalsService).showReactModal(ngvModalOptions);
+        });
     };
     return Main;
 }(Module_1.Module));

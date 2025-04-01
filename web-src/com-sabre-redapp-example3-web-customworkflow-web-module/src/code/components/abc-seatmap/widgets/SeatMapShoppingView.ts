@@ -43,7 +43,7 @@ export class SeatMapShoppingView extends AbstractView<AbstractModel> {
                 airMiles: segment.getAirMiles(),
                 departureDateTime: departureDateTime ? departureDateTime.toISOString().split('T')[0] : 'UNKNOWN', // Добавление даты
                 marketingAirline: segment.getMarketingAirline(),
-                cabinClass: 'Economy' // Пример, можно передавать реальные данные
+                cabinClass: 'A' // Пример, можно передавать реальные данные
             };
         });
 

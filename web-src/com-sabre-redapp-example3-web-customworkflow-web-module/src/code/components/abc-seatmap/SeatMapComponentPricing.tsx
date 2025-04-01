@@ -7,18 +7,19 @@ interface SeatMapProps {
   data: any;
 }
 
-const SeatMapComponentAvail: React.FC<SeatMapProps> = ({ config, data }) => {
+const SeatMapComponentPricing: React.FC<SeatMapProps> = ({ config, data }) => {
   const [segmentIndex, setSegmentIndex] = useState(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // 🔍 Логируем входящие данные
   console.log('🔹 [SeatMapComponent] received props:', { config, data });
 
-  const flight = getFlightFromSabreData(data, segmentIndex); // это рейс с сегментом
-  const flightSegments = data.flightSegments || [];
+// Получаем текущий сегмент
+const flightSegments = data.flightSegments || [];
+const currentSegment = flightSegments[segmentIndex] || {};
 
   // 🔍 Логируем сформированный flight
-  console.log('✈️ [SeatMapComponent] parsed flight:', flight);
+  console.log('✈️ [SeatMapComponent] parsed flight:', flightSegments);
   
   // flight для проверки
   // flight:{
@@ -33,7 +34,15 @@ const SeatMapComponentAvail: React.FC<SeatMapProps> = ({ config, data }) => {
 
   const seatMapData = {
     config,
-    flight,
+    flight: {
+        id: '001',  // Убедись, что передается id
+        airlineCode: currentSegment.marketingAirline || 'LH',
+        flightNo: currentSegment.flightNumber || '123',
+        departureDate: currentSegment.departureDateTime || '2025-04-22',
+        departure: currentSegment.origin || 'MUC',
+        arrival: currentSegment.destination || 'FRA',
+        cabinClass: currentSegment.cabinClass || 'A'
+    },
     layout: {
       decks: [
         {
@@ -98,7 +107,7 @@ const SeatMapComponentAvail: React.FC<SeatMapProps> = ({ config, data }) => {
       {/* окно с данными о рейсе */}
       <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#333' }}>
         <strong>🛫 Flight info:</strong>
-        <pre>{JSON.stringify(flight, null, 2)}</pre>
+        <pre>{JSON.stringify(currentSegment, null, 2)}</pre>
       </div>
 
       <div style={{ marginBottom: '1rem' }}>
@@ -136,4 +145,4 @@ const SeatMapComponentAvail: React.FC<SeatMapProps> = ({ config, data }) => {
 
 };
 
-export default SeatMapComponentAvail;
+export default SeatMapComponentPricing;

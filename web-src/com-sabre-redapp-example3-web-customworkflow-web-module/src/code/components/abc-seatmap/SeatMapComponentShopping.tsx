@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { getFlightFromSabreData } from './getFlightFromSabreData';
 
 interface SeatMapProps {
   config: any;

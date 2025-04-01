@@ -62,7 +62,7 @@ var SeatMapShoppingView = /** @class */ (function (_super) {
                 airMiles: segment.getAirMiles(),
                 departureDateTime: departureDateTime ? departureDateTime.toISOString().split('T')[0] : 'UNKNOWN',
                 marketingAirline: segment.getMarketingAirline(),
-                cabinClass: 'Economy' // Пример, можно передавать реальные данные
+                cabinClass: 'A' // Пример, можно передавать реальные данные
             };
         });
         // Пробуем рендерить React компонент с задержкой, чтобы гарантировать наличие элемента

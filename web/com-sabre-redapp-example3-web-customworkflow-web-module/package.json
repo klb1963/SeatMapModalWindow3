@@ -15,6 +15,7 @@
     "sabre-ngv-commsg": "*",
     "sabre-ngv-redAppSidePanel": "*",
     "sabre-ngv-airAvailability": "*",
+    "sabre-ngv-pricing": "*",
     "sabre-ngv-pos-cdm": "*",
     "sabre-ngv-modals": "*",
     "sabre-ngv-notification": "*"
@@ -28,6 +29,7 @@
       "sabre-ngv-commsg": "*",
       "sabre-ngv-redAppSidePanel": "*",
       "sabre-ngv-airAvailability": "*",
+      "sabre-ngv-pricing": "*",
       "sabre-ngv-pos-cdm": "*",
       "sabre-ngv-modals": "*",
       "sabre-ngv-notification": "*"
@@ -37,9 +39,9 @@
     "testDependencies": {},
     "buildInfo": {
       "concierge_version": "7.5.18",
-      "date": "2025-03-29T21:07:58.367Z",
-      "ts": 1743282478367,
-      "rebuildHash": "7x5x1814bb074c699498ee6fad2e972020122ca4e1a64f2"
+      "date": "2025-04-01T21:46:34.981Z",
+      "ts": 1743543994981,
+      "rebuildHash": "7x5x1813f00081799c977e8b57fa6bee1340e392d5ec7a1"
     }
   }
 }

@@ -14,14 +14,38 @@ import {CssClass} from 'sabre-ngv-core/decorators/classes/view/CssClass';
 @Mixin(WithoutFocusOnClick)
 export class SeatMapShoppingTile extends Tile<FlightSegment> implements WithoutFocusOnClick {
 
+    private uniqueRenderKey = 0; // Добавляем уникальный ключ
+
     selfDrawerContextModelPropagated(cpa: FlightSegment): void {
+        
+        this.uniqueRenderKey++; // Увеличиваем ключ каждый раз при вызове метода
+
         const flightNumbers = cpa.getShoppingItinerary().getFlightSegments().map((segment) => segment.getFlightNumber());
         const segmentsHtml = flightNumbers.length > 1
-            ? `<div>Segments:<br />${flightNumbers.join(', ')}</div>`
-            : `<div>Segment: ${flightNumbers.join(', ') || 'N/A'}</div>`
-        const priceHtml = `<div>Price: ${cpa.getShoppingItinerary().getPrice()}</div>`;
-
-        this.setDataContent(segmentsHtml + priceHtml);
+            ? `<div style="margin-bottom: 5px; text-align: center;">Segments:<br />${flightNumbers.join(', ')}</div>`
+            : `<div style="margin-bottom: 5px; text-align: center;">Segment: ${flightNumbers.join(', ') || 'N/A'}</div>`;
+        
+        // Добавляем кнопку ABC SeatMap
+        const buttonHtml = `
+        <div style="margin-top: 4px; display: flex; justify-content: center;">
+            <button class="abc-seatmap-button" style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 6px 10px 20px 10px;
+                background-color: #2f73bc;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                height: 24px;
+            ">
+                ABC SeatMap
+            </button>
+        </div>
+    `;
+        this.setDataContent(segmentsHtml + buttonHtml);
     }
 
     selfSelectedFareChanged(cpa: FlightSegment): void {
