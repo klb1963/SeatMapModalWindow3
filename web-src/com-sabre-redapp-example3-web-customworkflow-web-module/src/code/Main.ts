@@ -77,7 +77,7 @@ export class Main extends Module {
 
     const showSeatMapAvailabilityModal = (data: any) => {
       const modalOptions: ReactModalOptions = {
-        header: 'ABC SeatMap (Availability)',
+        header: 'SeatMaps ABC 360',
         component: React.createElement(SeatMapAvailView, data),
         modalClassName: 'react-tile-modal-class'
       };
@@ -88,7 +88,7 @@ export class Main extends Module {
     airAvailabilityService.createAirAvailabilitySearchTile(
       SeatMapAvailTile,
       showSeatMapAvailabilityModal,
-      'ABC SeatMap'
+      'SeatMaps ABC 360'
     );
   }
 

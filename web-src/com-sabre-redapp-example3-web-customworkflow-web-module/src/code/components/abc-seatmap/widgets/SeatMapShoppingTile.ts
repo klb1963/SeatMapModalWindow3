@@ -25,7 +25,7 @@ export class SeatMapShoppingTile extends Tile<FlightSegment> implements WithoutF
             ? `<div style="margin-bottom: 5px; text-align: center;">Segments:<br />${flightNumbers.join(', ')}</div>`
             : `<div style="margin-bottom: 5px; text-align: center;">Segment: ${flightNumbers.join(', ') || 'N/A'}</div>`;
         
-        // Добавляем кнопку ABC SeatMap
+        // Добавляем кнопку SeatMaps ABC 360
         const buttonHtml = `
         <div style="margin-top: 4px; display: flex; justify-content: center;">
             <button class="abc-seatmap-button" style="
@@ -41,7 +41,7 @@ export class SeatMapShoppingTile extends Tile<FlightSegment> implements WithoutF
                 font-size: 12px;
                 height: 24px;
             ">
-                ABC Seat Map
+                SeatMaps ABC 360
             </button>
         </div>
     `;

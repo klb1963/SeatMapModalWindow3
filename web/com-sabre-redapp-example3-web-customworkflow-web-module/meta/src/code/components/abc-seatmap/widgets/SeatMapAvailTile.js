@@ -3,11 +3,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SeatMapAvailTile = void 0;
 var React = require("react");
 var SeatMapAvailTile = function (data) {
-    return (React.createElement("div", { className: 'sdk-seatmap-custom-tile-content' },
-        React.createElement("strong", null, "ABC Seat Map"),
+    return (React.createElement("div", { className: 'sdk-seatmap-custom-tile-content', style: { padding: '10px' } },
         React.createElement("ol", null, data.flightSegments.map(function (segment, index) { return (React.createElement("li", { key: index },
             "Flight ",
-            segment.MarketingAirline.FlightNumber)); }))));
+            segment.MarketingAirline.FlightNumber)); })),
+        React.createElement("button", { className: "abc-seatmap-button", style: {
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '6px 10px',
+                backgroundColor: '#2f73bc',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px',
+                height: '24px',
+                marginBottom: '10px',
+                marginLeft: '25px' // ✅ Добавлено смещение влево на 25px
+            } }, "SeatMaps ABC 360")));
 };
 exports.SeatMapAvailTile = SeatMapAvailTile;
 // ========================================= 

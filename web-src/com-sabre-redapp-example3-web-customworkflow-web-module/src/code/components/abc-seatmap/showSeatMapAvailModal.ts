@@ -15,7 +15,7 @@ export function showSeatMapAvailModal(data: PublicAirAvailabilityData): void {
 
   // формируем options для передачи в модальное окно
   const options: ReactModalOptions = {
-    header: 'SeatMap Viewer',
+    header: 'SeatMaps ABC 360 Viewer',
     // создаем React-компонент на основе SeatMapComponent
     component: React.createElement(SeatMapComponentAvail, {
       config: quicketConfig,

@@ -11,7 +11,7 @@ function showSeatMapAvailModal(data) {
     var modalService = (0, Context_1.getService)(PublicModalService_1.PublicModalsService); // используем PublicModalsService
     // формируем options для передачи в модальное окно
     var options = {
-        header: 'SeatMap Viewer',
+        header: 'SeatMaps ABC 360 Viewer',
         // создаем React-компонент на основе SeatMapComponent
         component: React.createElement(SeatMapComponentAvail_1.default, {
             config: quicketConfig_1.quicketConfig,

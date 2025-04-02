@@ -83,13 +83,13 @@ var Main = /** @class */ (function (_super) {
         var airAvailabilityService = (0, Context_1.getService)(PublicAirAvailabilityService_1.PublicAirAvailabilityService); // внутренний сервис для предоставления данных в рамках Availability
         var showSeatMapAvailabilityModal = function (data) {
             var modalOptions = {
-                header: 'ABC SeatMap (Availability)',
+                header: 'SeatMaps ABC 360',
                 component: React.createElement(SeatMapAvailView_1.SeatMapAvailView, data),
                 modalClassName: 'react-tile-modal-class'
             };
             (0, Context_1.getService)(PublicModalService_1.PublicModalsService).showReactModal(modalOptions);
         };
-        airAvailabilityService.createAirAvailabilitySearchTile(SeatMapAvailTile_1.SeatMapAvailTile, showSeatMapAvailabilityModal, 'ABC SeatMap');
+        airAvailabilityService.createAirAvailabilitySearchTile(SeatMapAvailTile_1.SeatMapAvailTile, showSeatMapAvailabilityModal, 'SeatMaps ABC 360');
     };
     // ShoppingTile 
     Main.prototype.registerSeatMapShoppingTile = function () {

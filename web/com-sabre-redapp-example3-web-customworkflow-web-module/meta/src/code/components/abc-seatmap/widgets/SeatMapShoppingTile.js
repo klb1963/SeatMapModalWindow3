@@ -40,8 +40,8 @@ var SeatMapShoppingTile = /** @class */ (function (_super) {
         var segmentsHtml = flightNumbers.length > 1
             ? "<div style=\"margin-bottom: 5px; text-align: center;\">Segments:<br />" + flightNumbers.join(', ') + "</div>"
             : "<div style=\"margin-bottom: 5px; text-align: center;\">Segment: " + (flightNumbers.join(', ') || 'N/A') + "</div>";
-        // Добавляем кнопку ABC SeatMap
-        var buttonHtml = "\n        <div style=\"margin-top: 4px; display: flex; justify-content: center;\">\n            <button class=\"abc-seatmap-button\" style=\"\n                display: flex;\n                align-items: center;\n                justify-content: center;\n                padding: 6px 10px 20px 10px;\n                background-color: #2f73bc;\n                color: white;\n                border: none;\n                border-radius: 4px;\n                cursor: pointer;\n                font-size: 12px;\n                height: 24px;\n            \">\n                ABC Seat Map\n            </button>\n        </div>\n    ";
+        // Добавляем кнопку SeatMaps ABC 360
+        var buttonHtml = "\n        <div style=\"margin-top: 4px; display: flex; justify-content: center;\">\n            <button class=\"abc-seatmap-button\" style=\"\n                display: flex;\n                align-items: center;\n                justify-content: center;\n                padding: 6px 10px 20px 10px;\n                background-color: #2f73bc;\n                color: white;\n                border: none;\n                border-radius: 4px;\n                cursor: pointer;\n                font-size: 12px;\n                height: 24px;\n            \">\n                SeatMaps ABC 360\n            </button>\n        </div>\n    ";
         this.setDataContent(segmentsHtml + buttonHtml);
     };
     SeatMapShoppingTile.prototype.selfSelectedFareChanged = function (cpa) {
