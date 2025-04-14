@@ -43,6 +43,11 @@ var SeatMapShoppingView_1 = require("./components/abc-seatmap/widgets/SeatMapSho
 var IAirPricingService_1 = require("sabre-ngv-pricing/services/IAirPricingService");
 var PricingTile_1 = require("./components/abc-seatmap/widgets/PricingTile");
 var PricingView_1 = require("./components/abc-seatmap/widgets/PricingView");
+var NoviceButtonConfig_1 = require("sabre-ngv-xp/configs/NoviceButtonConfig");
+var SampleComponent_1 = require("./views/SampleComponent");
+var InterstitialService_1 = require("sabre-ngv-app/app/services/impl/InterstitialService");
+var IReservationService_1 = require("sabre-ngv-reservation/services/IReservationService");
+var ICustomFormsService_1 = require("sabre-ngv-custom-forms/services/ICustomFormsService");
 var Main = /** @class */ (function (_super) {
     __extends(Main, _super);
     function Main() {
@@ -54,6 +59,27 @@ var Main = /** @class */ (function (_super) {
         this.setupSidePanelButtons();
         this.registerSeatMapAvailTile();
         this.registerSeatMapShoppingTile();
+        var onClick = function (isOpen) {
+            console.log('Command Helper Button onClick', isOpen);
+            // insert logic here
+        };
+        var onClose = function () {
+            console.log('Command Helper Popover onClose');
+            // insert logic here
+        };
+        var config = new NoviceButtonConfig_1.NoviceButtonConfig(
+        // Define label for this button.
+        'Sample button', 
+        // On top of text we add an icon from Font Awesome.
+        'fa-comment', 
+        // Decorator is used to apply styles to the button that will be displayed in Command Helper Bar.
+        'com-sabre-redapp-example3-web-command-helper-button-web-module', 
+        // Base React class to be mounted as root in ReactDOM.render().
+        SampleComponent_1.SampleComponent, 
+        // Priority of the button determines button position in the Command Helper Bar.
+        -1000, onClick, onClose);
+        // Add button configuration to add a command helper button.
+        (0, Context_1.getService)(ExtensionPointService_1.ExtensionPointService).addConfig('novice-buttons', config);
     };
     Main.prototype.registerServices = function () {
         (0, Context_1.registerService)(CustomWorkflowService_1.CustomWorkflowService);
@@ -74,6 +100,7 @@ var Main = /** @class */ (function (_super) {
             new RedAppSidePanelButton_1.RedAppSidePanelButton('Refresh Trip Summary', baseCssClassNames + '-refreshtrip', refreshTripSummary_1.refreshTripSummary),
             new RedAppSidePanelButton_1.RedAppSidePanelButton('Create notification', baseCssClassNames + '-createNotification', createNotificationForm_1.createNotificationForm),
             new RedAppSidePanelButton_1.RedAppSidePanelButton('Hide notifications', baseCssClassNames + '-hideNotification', createNotificationForm_1.hideNotifications),
+            new RedAppSidePanelButton_1.RedAppSidePanelButton('Reservation', 'btn btn-secondary side-panel-button redapp-web-reservation', this.showReservation),
             selfRemoveBtn
         ]);
         (0, Context_1.getService)(ExtensionPointService_1.ExtensionPointService).addConfig('redAppSidePanel', config);
@@ -82,6 +109,7 @@ var Main = /** @class */ (function (_super) {
     Main.prototype.registerSeatMapAvailTile = function () {
         var airAvailabilityService = (0, Context_1.getService)(PublicAirAvailabilityService_1.PublicAirAvailabilityService); // внутренний сервис для предоставления данных в рамках Availability
         var showSeatMapAvailabilityModal = function (data) {
+            console.log('📥 [Availability] Received Data:', JSON.stringify(data, null, 2));
             var modalOptions = {
                 header: 'SeatMaps ABC 360',
                 component: React.createElement(SeatMapAvailView_1.SeatMapAvailView, data),
@@ -105,12 +133,39 @@ var Main = /** @class */ (function (_super) {
     };
     Main.prototype.createShowModalAction = function (view, header) {
         return (function (data) {
+            console.log('📥 [Pricing] Received Data (Full Object):', Object.keys(data));
+            console.log('📥 [Pricing] Full Data:', JSON.stringify(data, null, 2));
             var ngvModalOptions = {
                 header: header,
                 component: React.createElement(view, data),
                 modalClassName: 'react-tile-modal-class'
             };
             (0, Context_1.getService)(PublicModalService_1.PublicModalsService).showReactModal(ngvModalOptions);
+        });
+    };
+    // Reservaion Info Window
+    Main.prototype.showReservation = function () {
+        var interstitialService = (0, Context_1.getService)(InterstitialService_1.InterstitialService);
+        interstitialService.showInterstitial(15000);
+        var reservationPromise = (0, Context_1.getService)(IReservationService_1.IReservationService).getReservation();
+        reservationPromise.then(function (reservation) {
+            var form = {
+                title: 'Reservation Data',
+                fields: [
+                    {
+                        id: 'reservationData',
+                        type: 'PARAGRAPH',
+                        text: '```\n' +
+                            JSON.stringify(reservation, null, 2) +
+                            '\n```'
+                    }
+                ]
+            };
+            interstitialService.hideInterstitial();
+            (0, Context_1.getService)(ICustomFormsService_1.ICustomFormsService).openForm(form);
+        }).catch(function (error) {
+            interstitialService.hideInterstitial();
+            console.error('Error while receiving reservation', error);
         });
     };
     return Main;

@@ -2,9 +2,11 @@ import * as React from 'react';
 import { getService } from '../../Context';
 import { PublicModalsService } from 'sabre-ngv-modals/services/PublicModalService';
 import { ReactModalOptions } from 'sabre-ngv-modals/components/PublicReactModal/ReactModalOptions';
-import SeatMapComponentPricing from './SeatMapComponentPricing';
-import { quicketConfig } from './quicketConfig'; // config с настройками отображения карты
 
+import SeatMapComponentPricing from './SeatMapComponentPricing';
+import SeatMapComponentAvail from './SeatMapComponentAvail';
+
+import { quicketConfig } from './quicketConfig'; // config с настройками отображения карты
 import { AirPricingData } from 'sabre-ngv-pricing/response/interfaces/AirPricingData';
 
 // data: AirPricingData

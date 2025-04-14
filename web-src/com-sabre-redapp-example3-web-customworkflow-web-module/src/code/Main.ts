@@ -33,6 +33,14 @@ import { IAirPricingService } from 'sabre-ngv-pricing/services/IAirPricingServic
 import { PricingTile } from './components/abc-seatmap/widgets/PricingTile';
 import { PricingView } from './components/abc-seatmap/widgets/PricingView';
 
+import { NoviceButtonConfig } from 'sabre-ngv-xp/configs/NoviceButtonConfig';
+import { SampleComponent } from './views/SampleComponent';
+
+import {InterstitialService} from 'sabre-ngv-app/app/services/impl/InterstitialService';
+import {CommandMessageReservationRs} from 'sabre-ngv-pos-cdm/reservation';
+import {IReservationService} from 'sabre-ngv-reservation/services/IReservationService';
+import {ICustomFormsService} from 'sabre-ngv-custom-forms/services/ICustomFormsService';
+import {CustomForm} from 'sabre-ngv-custom-forms/interfaces/form/CustomForm';
 
 export class Main extends Module {
   init(): void {
@@ -41,6 +49,34 @@ export class Main extends Module {
     this.setupSidePanelButtons();
     this.registerSeatMapAvailTile();
     this.registerSeatMapShoppingTile();
+
+    const onClick = (isOpen: boolean) => {
+      console.log('Command Helper Button onClick', isOpen);
+      // insert logic here
+    };
+    const onClose = () => {
+      console.log('Command Helper Popover onClose');
+      // insert logic here
+    };
+
+    const config = new NoviceButtonConfig(
+      // Define label for this button.
+      'Sample button',
+      // On top of text we add an icon from Font Awesome.
+      'fa-comment',
+      // Decorator is used to apply styles to the button that will be displayed in Command Helper Bar.
+      'com-sabre-redapp-example3-web-command-helper-button-web-module',
+      // Base React class to be mounted as root in ReactDOM.render().
+      SampleComponent,
+      // Priority of the button determines button position in the Command Helper Bar.
+      -1000,
+      onClick,
+      onClose
+    );
+
+    // Add button configuration to add a command helper button.
+    getService(ExtensionPointService).addConfig('novice-buttons', config);
+
   }
 
   private registerServices(): void {
@@ -65,6 +101,7 @@ export class Main extends Module {
       new RedAppSidePanelButton('Refresh Trip Summary', baseCssClassNames + '-refreshtrip', refreshTripSummary),
       new RedAppSidePanelButton('Create notification', baseCssClassNames + '-createNotification', createNotificationForm),
       new RedAppSidePanelButton('Hide notifications', baseCssClassNames + '-hideNotification', hideNotifications),
+      new RedAppSidePanelButton('Reservation', 'btn btn-secondary side-panel-button redapp-web-reservation', this.showReservation),
       selfRemoveBtn
     ]);
 
@@ -76,6 +113,9 @@ export class Main extends Module {
     const airAvailabilityService = getService(PublicAirAvailabilityService); // внутренний сервис для предоставления данных в рамках Availability
 
     const showSeatMapAvailabilityModal = (data: any) => {
+
+      console.log('📥 [Availability] Received Data:', JSON.stringify(data, null, 2));
+
       const modalOptions: ReactModalOptions = {
         header: 'SeatMaps ABC 360',
         component: React.createElement(SeatMapAvailView, data),
@@ -109,6 +149,10 @@ export class Main extends Module {
 
   private createShowModalAction(view: React.FunctionComponent<any>, header: string): (data: any) => void {
     return ((data) => {
+
+      console.log('📥 [Pricing] Received Data (Full Object):', Object.keys(data));
+      console.log('📥 [Pricing] Full Data:', JSON.stringify(data, null, 2));
+
       const ngvModalOptions: ReactModalOptions = {
         header,
         component: React.createElement(
@@ -121,5 +165,32 @@ export class Main extends Module {
     })
   }
 
+  // Reservaion Info Window
+  private showReservation(): void {
+    const interstitialService = getService(InterstitialService);
+    interstitialService.showInterstitial(15000);
+
+    const reservationPromise: Promise<CommandMessageReservationRs> = getService(IReservationService).getReservation();
+
+    reservationPromise.then((reservation: CommandMessageReservationRs) => {
+      const form: CustomForm = {
+        title: 'Reservation Data',
+        fields: [
+          {
+            id: 'reservationData',
+            type: 'PARAGRAPH',
+            text: '```\n' +
+              JSON.stringify(reservation, null, 2) +
+              '\n```'
+          }
+        ]
+      };
+      interstitialService.hideInterstitial();
+      getService(ICustomFormsService).openForm(form);
+    }).catch((error) => {
+      interstitialService.hideInterstitial();
+      console.error('Error while receiving reservation', error);
+    });
+  }
 
 }

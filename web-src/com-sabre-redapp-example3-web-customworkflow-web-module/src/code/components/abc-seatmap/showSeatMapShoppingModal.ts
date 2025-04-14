@@ -30,7 +30,7 @@ export function showSeatMapShoppingModal(data: SeatMapShoppingData): void {
 
     // формируем options для передачи в модальное окно
     const options: ReactModalOptions = {
-        header: 'ABC SeatMap Shopping Viewer',
+        header: 'SeatMaps ABC 360 Viewer',
         // создаем React-компонент на основе SeatMapComponent
         component: React.createElement(SeatMapComponent, {
             config: quicketConfig,

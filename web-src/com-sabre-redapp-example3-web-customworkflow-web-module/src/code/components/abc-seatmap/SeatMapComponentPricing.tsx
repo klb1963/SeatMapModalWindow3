@@ -12,7 +12,9 @@ const SeatMapComponentPricing: React.FC<SeatMapProps> = ({ config, data }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // 🔍 Логируем входящие данные
-  console.log('🔹 [SeatMapComponent] received props:', { config, data });
+  // console.log('🔹 [SeatMapComponent] received props:', { config, data });
+  
+  console.log('📥 [SeatMapComponent] Incoming data:', data);
 
 // Получаем текущий сегмент
 const flightSegments = data.flightSegments || [];

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { getFlightFromSabreData } from './getFlightFromSabreData';
 
 interface SeatMapProps {
   config: any;
@@ -25,7 +24,6 @@ const SeatMapComponentShopping: React.FC<SeatMapProps> = ({ config, data }) => {
         //     departure: 'MUC',
         //     arrival: 'FRA'
         // };
-
 
   const seatMapData = {
     config,

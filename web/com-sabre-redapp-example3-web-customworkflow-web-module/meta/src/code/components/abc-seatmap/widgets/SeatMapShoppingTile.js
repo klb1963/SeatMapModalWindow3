@@ -30,19 +30,33 @@ var CssClass_1 = require("sabre-ngv-core/decorators/classes/view/CssClass");
 var SeatMapShoppingTile = /** @class */ (function (_super) {
     __extends(SeatMapShoppingTile, _super);
     function SeatMapShoppingTile() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.uniqueRenderKey = 0; // Добавляем уникальный ключ
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     SeatMapShoppingTile.prototype.selfDrawerContextModelPropagated = function (cpa) {
-        this.uniqueRenderKey++; // Увеличиваем ключ каждый раз при вызове метода
-        var flightNumbers = cpa.getShoppingItinerary().getFlightSegments().map(function (segment) { return segment.getFlightNumber(); });
-        var segmentsHtml = flightNumbers.length > 1
-            ? "<div style=\"margin-bottom: 5px; text-align: center;\">Segments:<br />" + flightNumbers.join(', ') + "</div>"
-            : "<div style=\"margin-bottom: 5px; text-align: center;\">Segment: " + (flightNumbers.join(', ') || 'N/A') + "</div>";
-        // Добавляем кнопку SeatMaps ABC 360
-        var buttonHtml = "\n        <div style=\"margin-top: 4px; display: flex; justify-content: center;\">\n            <button class=\"abc-seatmap-button\" style=\"\n                display: flex;\n                align-items: center;\n                justify-content: center;\n                padding: 6px 10px 20px 10px;\n                background-color: #2f73bc;\n                color: white;\n                border: none;\n                border-radius: 4px;\n                cursor: pointer;\n                font-size: 12px;\n                height: 24px;\n            \">\n                SeatMaps ABC 360\n            </button>\n        </div>\n    ";
-        this.setDataContent(segmentsHtml + buttonHtml);
+        // 🔍 Добавляем логирование для изучения данных cpa
+        console.log('📥 [Shopping] cpa Object:', cpa);
+        console.log('📥 [Shopping] Available methods on cpa:', Object.keys(cpa));
+        try {
+            var shoppingItinerary = cpa.getShoppingItinerary();
+            console.log('📥 [Shopping] shoppingItinerary:', shoppingItinerary);
+            var flightSegments = shoppingItinerary.getFlightSegments();
+            console.log('📥 [Shopping] Flight Segments:', flightSegments);
+            // Логируем каждый сегмент отдельно
+            flightSegments.forEach(function (segment, index) {
+                console.log("\uD83D\uDCE5 [Shopping] Flight Segment " + index + ":", segment);
+            });
+            // Извлекаем номера рейсов для отображения в Tile
+            var flightNumbers = cpa.getShoppingItinerary().getFlightSegments().map(function (segment) { return segment.getFlightNumber(); });
+            var segmentsHtml = flightNumbers.length > 1
+                ? "<div style=\"margin-bottom: 5px; text-align: center;\">Segments:<br />" + flightNumbers.join(', ') + "</div>"
+                : "<div style=\"margin-bottom: 5px; text-align: center;\">Segment: " + (flightNumbers.join(', ') || 'N/A') + "</div>";
+            // Добавляем кнопку SeatMaps ABC 360
+            var buttonHtml = "\n        <div style=\"margin-top: 4px; display: flex; justify-content: center;\">\n            <button class=\"abc-seatmap-button\" style=\"\n                display: flex;\n                align-items: center;\n                justify-content: center;\n                padding: 6px 10px 20px 10px;\n                background-color: #2f73bc;\n                color: white;\n                border: none;\n                border-radius: 4px;\n                cursor: pointer;\n                font-size: 12px;\n                height: 24px;\n            \">\n                SeatMaps ABC 360\n            </button>\n        </div>\n    ";
+            this.setDataContent(segmentsHtml + buttonHtml);
+        }
+        catch (error) {
+            console.error('❌ [Shopping] Error retrieving flight segments:', error);
+        }
     };
     SeatMapShoppingTile.prototype.selfSelectedFareChanged = function (cpa) {
         this.selfDrawerContextModelPropagated(cpa);
@@ -50,7 +64,7 @@ var SeatMapShoppingTile = /** @class */ (function (_super) {
     SeatMapShoppingTile = __decorate([
         (0, CssClass_1.CssClass)('com-sabre-redapp-example3-web-tilewidgets-web-module', { overwrite: false }),
         (0, Initial_1.Initial)({
-            caption: 'ABC SeatMap',
+            caption: 'SeatMaps ABC 360',
             className: 'web-air-shopping-widget-sample'
         }),
         (0, Mixin_1.Mixin)(WithoutFocusOnClick_1.WithoutFocusOnClick)

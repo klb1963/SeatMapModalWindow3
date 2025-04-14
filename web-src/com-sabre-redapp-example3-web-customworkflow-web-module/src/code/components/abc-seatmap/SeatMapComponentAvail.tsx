@@ -14,7 +14,7 @@ const SeatMapComponentAvail: React.FC<SeatMapProps> = ({ config, data }) => {
   // 🔍 Логируем входящие данные
   console.log('🔹 [SeatMapComponent] received props:', { config, data });
 
-  const flight = getFlightFromSabreData(data, segmentIndex); // это рейс с сегментом
+  const flight = getFlightFromSabreData(data, segmentIndex); // это сегмент полета c датой
   const flightSegments = data.flightSegments || [];
 
   // 🔍 Логируем сформированный flight
@@ -69,7 +69,7 @@ const SeatMapComponentAvail: React.FC<SeatMapProps> = ({ config, data }) => {
       flight: JSON.stringify(seatMapData.flight),
       layout: JSON.stringify(seatMapData.layout),
 
-      // можно раскомментировать при необходимости
+      // раскомментировать при необходимости
       // availability: JSON.stringify(seatMapData.availability),
       // passengers: JSON.stringify(seatMapData.passengers)
 

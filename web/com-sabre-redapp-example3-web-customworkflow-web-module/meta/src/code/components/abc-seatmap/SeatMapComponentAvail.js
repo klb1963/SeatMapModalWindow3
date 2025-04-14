@@ -9,7 +9,7 @@ var SeatMapComponentAvail = function (_a) {
     var iframeRef = (0, react_1.useRef)(null);
     // 🔍 Логируем входящие данные
     console.log('🔹 [SeatMapComponent] received props:', { config: config, data: data });
-    var flight = (0, getFlightFromSabreData_1.getFlightFromSabreData)(data, segmentIndex); // это рейс с сегментом
+    var flight = (0, getFlightFromSabreData_1.getFlightFromSabreData)(data, segmentIndex); // это сегмент полета c датой
     var flightSegments = data.flightSegments || [];
     // 🔍 Логируем сформированный flight
     console.log('✈️ [SeatMapComponent] parsed flight:', flight);
@@ -58,7 +58,7 @@ var SeatMapComponentAvail = function (_a) {
             config: JSON.stringify(seatMapData.config),
             flight: JSON.stringify(seatMapData.flight),
             layout: JSON.stringify(seatMapData.layout),
-            // можно раскомментировать при необходимости
+            // раскомментировать при необходимости
             // availability: JSON.stringify(seatMapData.availability),
             // passengers: JSON.stringify(seatMapData.passengers)
         };

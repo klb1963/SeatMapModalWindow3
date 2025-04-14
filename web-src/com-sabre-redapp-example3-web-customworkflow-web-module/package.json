@@ -18,7 +18,8 @@
     "sabre-ngv-pricing": "*",
     "sabre-ngv-pos-cdm": "*",
     "sabre-ngv-modals": "*",
-    "sabre-ngv-notification": "*"
+    "sabre-ngv-notification": "*",
+    "sabre-ngv-reservation": "*"
   },
   "ngv": {
     "buildDependencies": {
@@ -32,7 +33,8 @@
       "sabre-ngv-pricing": "*",
       "sabre-ngv-pos-cdm": "*",
       "sabre-ngv-modals": "*",
-      "sabre-ngv-notification": "*"
+      "sabre-ngv-notification": "*",
+      "sabre-ngv-reservation": "*"
     },
     "concierge_version_min": "7.5.5",
     "runtimeDependencies": {},

@@ -14,7 +14,7 @@ export const SeatMapAvailTile = (data: PublicAirAvailabilityData): React.ReactEl
                 ))}
             </ol>
 
-            {/* Добавлена кнопка под заголовком */}
+            {/* Добавлена кнопка*/}
             <button 
                 className="abc-seatmap-button"
                 style={{
@@ -29,7 +29,7 @@ export const SeatMapAvailTile = (data: PublicAirAvailabilityData): React.ReactEl
                     cursor: 'pointer',
                     fontSize: '12px',
                     height: '24px',
-                    marginBottom: '10px', // Отступ перед списком сегментов
+                    marginBottom: '10px',
                     marginLeft: '25px' // ✅ Добавлено смещение влево на 25px
                 }}
             >

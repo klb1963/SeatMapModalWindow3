@@ -7,7 +7,8 @@ var SeatMapComponentPricing = function (_a) {
     var _b = (0, react_1.useState)(0), segmentIndex = _b[0], setSegmentIndex = _b[1];
     var iframeRef = (0, react_1.useRef)(null);
     // 🔍 Логируем входящие данные
-    console.log('🔹 [SeatMapComponent] received props:', { config: config, data: data });
+    // console.log('🔹 [SeatMapComponent] received props:', { config, data });
+    console.log('📥 [SeatMapComponent] Incoming data:', data);
     // Получаем текущий сегмент
     var flightSegments = data.flightSegments || [];
     var currentSegment = flightSegments[segmentIndex] || {};

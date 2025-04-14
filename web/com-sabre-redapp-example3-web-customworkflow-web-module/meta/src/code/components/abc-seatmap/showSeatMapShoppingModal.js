@@ -22,7 +22,7 @@ function showSeatMapShoppingModal(data) {
     }
     // формируем options для передачи в модальное окно
     var options = {
-        header: 'ABC SeatMap Shopping Viewer',
+        header: 'SeatMaps ABC 360 Viewer',
         // создаем React-компонент на основе SeatMapComponent
         component: React.createElement(SeatMapComponentAvail_1.default, {
             config: quicketConfig_1.quicketConfig,
