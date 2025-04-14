@@ -5,66 +5,78 @@ import { WithoutFocusOnClick } from 'sabre-ngv-app/app/common/mixins/WithoutFocu
 import { Initial } from 'sabre-ngv-core/decorators/classes/Initial';
 import { Mixin } from 'sabre-ngv-core/decorators/classes/Mixin';
 import { CssClass } from 'sabre-ngv-core/decorators/classes/view/CssClass';
+import { extractSegmentData } from '../extractSegmentData';
 
 @CssClass('com-sabre-redapp-example3-web-tilewidgets-web-module', { overwrite: false })
 @Initial<TileOptions>({
-    caption: 'SeatMaps ABC 360', // имя tile
+    caption: 'SeatMaps ABC 360',
     className: 'web-air-shopping-widget-sample'
 })
 @Mixin(WithoutFocusOnClick)
 export class SeatMapShoppingTile extends Tile<FlightSegment> implements WithoutFocusOnClick {
+    declare context: any;
+
+    private currentSegment: FlightSegment | null = null;
+    private sharedModel: any = null;
 
     selfDrawerContextModelPropagated(cpa: FlightSegment): void {
-
-        // 🔍 Добавляем логирование для изучения данных cpa
-        console.log('📥 [Shopping] cpa Object:', cpa);
-        console.log('📥 [Shopping] Available methods on cpa:', Object.keys(cpa));
-
         try {
-            const shoppingItinerary = cpa.getShoppingItinerary();
-            console.log('📥 [Shopping] shoppingItinerary:', shoppingItinerary);
+            this.currentSegment = cpa;
+            const segment = cpa;
+            const sharedSegmentData = extractSegmentData(segment);
 
-            const flightSegments = shoppingItinerary.getFlightSegments();
-            console.log('📥 [Shopping] Flight Segments:', flightSegments);
+            // Сохраняем или повторно используем sharedModel
+            if (this.context?.sharedContextModel?.set) {
+                this.sharedModel = this.context.sharedContextModel;
+                this.sharedModel.set('selectedSegmentForPricing', sharedSegmentData);
+                console.log('✅ Сохранили сегмент в SharedContextModel:', sharedSegmentData);
+            } else if (this.sharedModel?.set) {
+                this.sharedModel.set('selectedSegmentForPricing', sharedSegmentData);
+                console.log('♻️ Повторно сохранили сегмент в SharedContextModel:', sharedSegmentData);
+            } else {
+                console.warn('⚠️ SharedContextModel недоступен — сегмент не сохранён.');
+            }
 
-            // Логируем каждый сегмент отдельно
-            flightSegments.forEach((segment, index) => {
-                console.log(`📥 [Shopping] Flight Segment ${index}:`, segment);
+            const segments = cpa.getShoppingItinerary().getFlightSegments();
+
+            const label = segments.map(segment => {
+                const origin = segment.getOriginIata();
+                const destination = segment.getDestinationIata();
+                const carrier = segment.getMarketingAirline();
+                const flightNumber = segment.getFlightNumber();
+                return `${origin}-${destination}:${carrier} ${flightNumber}`;
+            }).join(' ');
+
+            const tileHtml = `
+                <div style="display: flex; flex-direction: column; align-items: center; font-size: 12px;">
+                    <div style="margin-bottom: 8px;">${label}</div>
+                    <button class="abc-seatmap-button" style="
+                        padding: 0px 12px 12px 12px;
+                        background-color: #2f73bc;
+                        color: white;
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-size: 12px;">
+                        SeatMaps ABC 360
+                    </button>
+                </div>
+            `;
+
+            this.setDataContent(tileHtml);
+
+            // Обработчик клика
+            this.$el.off('click', '.abc-seatmap-button');
+            this.$el.on('click', '.abc-seatmap-button', () => {
+                console.log('🔁 Клик по кнопке — повторно инициируем View');
+                this.trigger('selfDrawerContextModelPropagated', this.model); // ✅ нативно
             });
 
-            // Извлекаем номера рейсов для отображения в Tile
-            const flightNumbers = cpa.getShoppingItinerary().getFlightSegments().map((segment) => segment.getFlightNumber());
-
-            const segmentsHtml = flightNumbers.length > 1
-                ? `<div style="margin-bottom: 5px; text-align: center;">Segments:<br />${flightNumbers.join(', ')}</div>`
-                : `<div style="margin-bottom: 5px; text-align: center;">Segment: ${flightNumbers.join(', ') || 'N/A'}</div>`;
-
-            // Добавляем кнопку SeatMaps ABC 360
-            const buttonHtml = `
-        <div style="margin-top: 4px; display: flex; justify-content: center;">
-            <button class="abc-seatmap-button" style="
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 6px 10px 20px 10px;
-                background-color: #2f73bc;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 12px;
-                height: 24px;
-            ">
-                SeatMaps ABC 360
-            </button>
-        </div>
-    `;
-            this.setDataContent(segmentsHtml + buttonHtml);
-
         } catch (error) {
-            console.error('❌ [Shopping] Error retrieving flight segments:', error);
+            console.error('❌ Ошибка в selfDrawerContextModelPropagated:', error);
         }
     }
+
     selfSelectedFareChanged(cpa: FlightSegment): void {
         this.selfDrawerContextModelPropagated(cpa);
     }

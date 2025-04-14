@@ -4,7 +4,6 @@ import { PublicModalsService } from 'sabre-ngv-modals/services/PublicModalServic
 import { ReactModalOptions } from 'sabre-ngv-modals/components/PublicReactModal/ReactModalOptions';
 
 import SeatMapComponentPricing from './SeatMapComponentPricing';
-import SeatMapComponentAvail from './SeatMapComponentAvail';
 
 import { quicketConfig } from './quicketConfig'; // config с настройками отображения карты
 import { AirPricingData } from 'sabre-ngv-pricing/response/interfaces/AirPricingData';

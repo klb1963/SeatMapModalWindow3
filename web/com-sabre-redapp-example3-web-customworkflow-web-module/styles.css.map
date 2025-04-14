@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "sources": [
+    "input"
+  ],
+  "names": [],
+  "mappings": "AAEA,6EAEI,QAAA,KAFJ,kFAMI,QAAA,IAAA,EANJ,uEAUI,QAAA",
+  "file": "styles.css",
+  "sourcesContent": [
+    "@import \"../../node_modules/sabre-ngv-app/meta/styles/core-styles\";\n\n.com-sabre-redapp-example3-web-customworkflow-web-module {\n  .agent-profile-view {\n    padding: 15px;\n  }\n\n  .agent-profile-view-item {\n    padding: 3px 0;\n  } \n\n  .runtime-view {\n    padding: 15px;\n  }\n}\n"
+  ],
+  "sourceRoot": ""
+}

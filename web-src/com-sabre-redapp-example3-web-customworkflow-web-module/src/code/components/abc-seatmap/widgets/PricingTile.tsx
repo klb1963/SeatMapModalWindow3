@@ -20,7 +20,7 @@ export const PricingTile = (data: AirPricingData) : React.ReactElement => {
                     fontSize: '12px'
                 }}
             >
-                ABC Seat Map
+                SeatMaps ABC 360
             </button>
         </div>
     );

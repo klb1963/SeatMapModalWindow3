@@ -23,56 +23,49 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SeatMapShoppingView = void 0;
 var React = require("react");
-var ReactDOM = require("react-dom"); // ✅ Явный импорт ReactDOM
+var ReactDOM = require("react-dom");
 var AbstractView_1 = require("sabre-ngv-app/app/AbstractView");
 var SeatMapComponentShopping_1 = require("../SeatMapComponentShopping");
-var quicketConfig_1 = require("../quicketConfig"); // config с настройками отображения карты
+var quicketConfig_1 = require("../quicketConfig");
 var CssClass_1 = require("sabre-ngv-core/decorators/classes/view/CssClass");
 var Template_1 = require("sabre-ngv-core/decorators/classes/view/Template");
 var SeatMapShoppingView = /** @class */ (function (_super) {
     __extends(SeatMapShoppingView, _super);
     function SeatMapShoppingView() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.currentSegment = null;
         _this.flightSegments = [];
         _this.selectedSegmentIndex = 0;
         return _this;
     }
     SeatMapShoppingView.prototype.selfDrawerContextModelPropagated = function (cpa) {
         console.log('📌 [SeatMapShoppingView] selfDrawerContextModelPropagated called with cpa:', cpa);
-        // // 🔨 Хардкодим данные для проверки
-        // const flightData = {
-        //     airlineCode: 'LH',
-        //     flightNo: '123',
-        //     departureDate: '2025-04-22',
-        //     departure: 'MUC',
-        //     arrival: 'FRA'
-        // };
-        // console.log('📌 [SeatMapShoppingView] Hardcoded flight data:', flightData);
-        // this.flightSegments = [flightData];
-        // this.selectedSegmentIndex = 0;
-        var segments = cpa.getShoppingItinerary().getFlightSegments();
-        this.flightSegments = segments.map(function (segment) {
-            var departureDateTime = segment.getDepartureDate();
+        this.currentSegment = cpa;
+        this.updateFlightSegmentsFromSegment(cpa);
+        this.tryRenderReactComponent();
+    };
+    SeatMapShoppingView.prototype.updateFlightSegmentsFromSegment = function (segment) {
+        var segments = segment.getShoppingItinerary().getFlightSegments();
+        this.flightSegments = segments.map(function (s) {
+            var departureDateTime = s.getDepartureDate();
             return {
-                id: '001',
-                segmentId: segment.getSegmentId(),
-                flightNumber: segment.getFlightNumber(),
-                origin: segment.getOriginIata(),
-                destination: segment.getDestinationIata(),
-                airMiles: segment.getAirMiles(),
+                id: s.getSegmentId(),
+                segmentId: s.getSegmentId(),
+                flightNumber: s.getFlightNumber(),
+                origin: s.getOriginIata(),
+                destination: s.getDestinationIata(),
+                airMiles: s.getAirMiles(),
                 departureDateTime: departureDateTime ? departureDateTime.toISOString().split('T')[0] : 'UNKNOWN',
-                marketingAirline: segment.getMarketingAirline(),
-                cabinClass: 'A' // Пример, можно передавать реальные данные
+                marketingAirline: s.getMarketingAirline(),
+                cabinClass: 'A' // Пример: при необходимости можно вытянуть реально
             };
         });
-        // Пробуем рендерить React компонент с задержкой, чтобы гарантировать наличие элемента
-        this.tryRenderReactComponent();
     };
     SeatMapShoppingView.prototype.tryRenderReactComponent = function (attempts) {
         var _this = this;
         if (attempts === void 0) { attempts = 0; }
         var MAX_ATTEMPTS = 10;
-        var INTERVAL = 500; // Интервал между попытками (в миллисекундах)
+        var INTERVAL = 500;
         var rootElement = document.getElementById('seatmap-root');
         if (rootElement) {
             console.log('✅ [SeatMapShoppingView] Элемент seatmap-root найден. Начинаем рендеринг React компонента.');
@@ -87,20 +80,31 @@ var SeatMapShoppingView = /** @class */ (function (_super) {
         }
     };
     SeatMapShoppingView.prototype.renderReactComponent = function () {
+        var _a;
+        if (!this.currentSegment) {
+            console.warn('⚠️ Нет сохранённого сегмента. React компонент не будет отрендерен.');
+            return;
+        }
+        if (!((_a = this.flightSegments) === null || _a === void 0 ? void 0 : _a.length)) {
+            console.warn('⚠️ flightSegments пуст. Переинициализация из текущего сегмента.');
+            this.updateFlightSegmentsFromSegment(this.currentSegment);
+        }
         var rootElement = document.getElementById('seatmap-root');
         if (rootElement) {
-            // Очищаем предыдущий рендер перед тем, как снова отрендерить React компонент
             ReactDOM.unmountComponentAtNode(rootElement);
-            var data = {
-                flightSegments: this.flightSegments,
-                selectedSegmentIndex: this.selectedSegmentIndex
-            };
-            ReactDOM.render(React.createElement(SeatMapComponentShopping_1.default, { config: quicketConfig_1.quicketConfig, data: data }), rootElement);
-            console.log('📌 [SeatMapShoppingView] React Component успешно отрендерен в #seatmap-root.');
+            rootElement.innerHTML = '';
         }
         else {
-            console.error('❌ [SeatMapShoppingView] Элемент с id="seatmap-root" не найден при попытке рендеринга.');
+            rootElement = document.createElement('div');
+            rootElement.id = 'seatmap-root';
+            document.body.appendChild(rootElement);
         }
+        var data = {
+            flightSegments: this.flightSegments,
+            selectedSegmentIndex: this.selectedSegmentIndex
+        };
+        ReactDOM.render(React.createElement(SeatMapComponentShopping_1.default, { config: quicketConfig_1.quicketConfig, data: data }), rootElement);
+        console.log('📌 [SeatMapShoppingView] React Component успешно отрендерен в #seatmap-root.');
     };
     SeatMapShoppingView = __decorate([
         (0, CssClass_1.CssClass)('com-sabre-redapp-example3-web-customworkflow-web-module'),
@@ -109,3 +113,14 @@ var SeatMapShoppingView = /** @class */ (function (_super) {
     return SeatMapShoppingView;
 }(AbstractView_1.AbstractView));
 exports.SeatMapShoppingView = SeatMapShoppingView;
+// // 🔨 Хардкодим данные для проверки
+// const flightData = {
+//     airlineCode: 'LH',
+//     flightNo: '123',
+//     departureDate: '2025-04-22',
+//     departure: 'MUC',
+//     arrival: 'FRA'
+// };
+// console.log('📌 [SeatMapShoppingView] Hardcoded flight data:', flightData);
+// this.flightSegments = [flightData];
+// this.selectedSegmentIndex = 0;

@@ -16,6 +16,6 @@ var PricingTile = function (data) {
                 borderRadius: '4px',
                 cursor: 'pointer',
                 fontSize: '12px'
-            } }, "ABC Seat Map")));
+            } }, "SeatMaps ABC 360")));
 };
 exports.PricingTile = PricingTile;
