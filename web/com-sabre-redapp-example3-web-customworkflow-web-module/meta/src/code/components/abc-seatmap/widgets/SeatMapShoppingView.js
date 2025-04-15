@@ -46,8 +46,20 @@ var SeatMapShoppingView = /** @class */ (function (_super) {
     };
     SeatMapShoppingView.prototype.updateFlightSegmentsFromSegment = function (segment) {
         var segments = segment.getShoppingItinerary().getFlightSegments();
+        var aircraftTypes = {
+            '359': 'Airbus A350-900',
+            '388': 'Airbus A380-800',
+            '77W': 'Boeing 777-300ER',
+            '320': 'Airbus A320',
+            '321': 'Airbus A321',
+            '738': 'Boeing 737-800',
+            '787': 'Boeing 787 Dreamliner'
+        };
         this.flightSegments = segments.map(function (s) {
+            var _a;
             var departureDateTime = s.getDepartureDate();
+            var equipmentCode = ((_a = s.getEquipmentCode) === null || _a === void 0 ? void 0 : _a.call(s)) || 'UNKNOWN';
+            var equipmentDescription = aircraftTypes[equipmentCode] || 'Not Available';
             return {
                 id: s.getSegmentId(),
                 segmentId: s.getSegmentId(),
@@ -57,7 +69,11 @@ var SeatMapShoppingView = /** @class */ (function (_super) {
                 airMiles: s.getAirMiles(),
                 departureDateTime: departureDateTime ? departureDateTime.toISOString().split('T')[0] : 'UNKNOWN',
                 marketingAirline: s.getMarketingAirline(),
-                cabinClass: 'A' // Пример: при необходимости можно вытянуть реально
+                cabinClass: 'A',
+                aircraft: {
+                    code: equipmentCode,
+                    description: equipmentDescription
+                }
             };
         });
     };
@@ -103,6 +119,14 @@ var SeatMapShoppingView = /** @class */ (function (_super) {
             flightSegments: this.flightSegments,
             selectedSegmentIndex: this.selectedSegmentIndex
         };
+        // 💾 Сохраняем flightSegments в sessionStorage для использования в Pricing
+        try {
+            window.sessionStorage.setItem('flightSegmentsForPricing', JSON.stringify(this.flightSegments));
+            console.log('💾 [SeatMapShoppingView] Сегменты маршрута сохранены в sessionStorage:', this.flightSegments);
+        }
+        catch (error) {
+            console.error('❌ Ошибка при сохранении данных в sessionStorage:', error);
+        }
         ReactDOM.render(React.createElement(SeatMapComponentShopping_1.default, { config: quicketConfig_1.quicketConfig, data: data }), rootElement);
         console.log('📌 [SeatMapShoppingView] React Component успешно отрендерен в #seatmap-root.');
     };
@@ -113,14 +137,3 @@ var SeatMapShoppingView = /** @class */ (function (_super) {
     return SeatMapShoppingView;
 }(AbstractView_1.AbstractView));
 exports.SeatMapShoppingView = SeatMapShoppingView;
-// // 🔨 Хардкодим данные для проверки
-// const flightData = {
-//     airlineCode: 'LH',
-//     flightNo: '123',
-//     departureDate: '2025-04-22',
-//     departure: 'MUC',
-//     arrival: 'FRA'
-// };
-// console.log('📌 [SeatMapShoppingView] Hardcoded flight data:', flightData);
-// this.flightSegments = [flightData];
-// this.selectedSegmentIndex = 0;

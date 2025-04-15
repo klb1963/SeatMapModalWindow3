@@ -4,27 +4,35 @@ import { PublicModalsService } from 'sabre-ngv-modals/services/PublicModalServic
 import { ReactModalOptions } from 'sabre-ngv-modals/components/PublicReactModal/ReactModalOptions';
 
 import SeatMapComponentPricing from './SeatMapComponentPricing';
+import { quicketConfig } from './quicketConfig';
 
-import { quicketConfig } from './quicketConfig'; // config с настройками отображения карты
-import { AirPricingData } from 'sabre-ngv-pricing/response/interfaces/AirPricingData';
+export function showSeatMapPricingModal(): void {
+  const modalService = getService(PublicModalsService);
 
-// data: AirPricingData
+  // 🟡 Получаем сохранённые сегменты из sessionStorage
+  const raw = window.sessionStorage.getItem('flightSegmentsForPricing');
+  let segments: any[] = [];
 
-export function showSeatMapPricingModal(data: AirPricingData): void {
+  try {
+    segments = raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.error('❌ Ошибка разбора данных flightSegmentsForPricing из sessionStorage:', e);
+  }
 
-  const modalService = getService(PublicModalsService); // используем PublicModalsService
+  if (!segments.length) {
+    alert('❗ Нет доступных сегментов рейса для отображения карты мест.');
+    return;
+  }
 
-  // формируем options для передачи в модальное окно
   const options: ReactModalOptions = {
-    header: 'SeatMap Viewer',
-    // создаем React-компонент на основе SeatMapComponent
+    header: 'SeatMap Viewer (Pricing)',
     component: React.createElement(SeatMapComponentPricing, {
       config: quicketConfig,
-      data // передаём data - объект типа AirPricingData целиком
+      flightSegments: segments,        // 🔄 передаём сохранённые сегменты
+      selectedSegmentIndex: 0          // можно начать с первого
     }),
     onHide: () => console.log('[SeatMap Modal] Closed')
   };
 
-  modalService.showReactModal(options); // показываем модальное окно с его options
-  
+  modalService.showReactModal(options);
 }

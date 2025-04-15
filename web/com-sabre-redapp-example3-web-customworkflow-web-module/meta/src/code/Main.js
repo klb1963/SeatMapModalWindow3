@@ -143,7 +143,7 @@ var Main = /** @class */ (function (_super) {
             (0, Context_1.getService)(PublicModalService_1.PublicModalsService).showReactModal(ngvModalOptions);
         });
     };
-    // Reservaion Info Window
+    // Reservation Info Window
     Main.prototype.showReservation = function () {
         var interstitialService = (0, Context_1.getService)(InterstitialService_1.InterstitialService);
         interstitialService.showInterstitial(15000);

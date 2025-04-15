@@ -1,49 +1,32 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { getFlightFromSabreData } from './getFlightFromSabreData';
 
-interface SeatMapProps {
+interface SeatMapComponentPricingProps {
   config: any;
-  data: any;
+  flightSegments: any[];
+  selectedSegmentIndex: number;
 }
 
-const SeatMapComponentPricing: React.FC<SeatMapProps> = ({ config, data }) => {
-  const [segmentIndex, setSegmentIndex] = useState(0);
+const SeatMapComponentPricing: React.FC<SeatMapComponentPricingProps> = ({
+  config,
+  flightSegments,
+  selectedSegmentIndex
+}) => {
+  const [segmentIndex, setSegmentIndex] = useState(selectedSegmentIndex);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // 🔍 Логируем входящие данные
-  // console.log('🔹 [SeatMapComponent] received props:', { config, data });
-  
-  console.log('📥 [SeatMapComponent] Incoming data:', data);
-
-// Получаем текущий сегмент
-const flightSegments = data.flightSegments || [];
-const currentSegment = flightSegments[segmentIndex] || {};
-
-  // 🔍 Логируем сформированный flight
-  console.log('✈️ [SeatMapComponent] parsed flight:', flightSegments);
-  
-  // flight для проверки
-  // flight:{
-  //   id: '001', 
-  //     airlineCode: 'LH',
-  //     flightNo: '123',
-  //     departureDate: '2025-04-22', 
-  //     departure: 'MUC',
-  //     arrival: 'FRA',
-  //     cabinClass: 'A'
-  // },
+  const currentSegment = flightSegments[segmentIndex] || {};
 
   const seatMapData = {
     config,
     flight: {
-        id: '001',  // Убедись, что передается id
-        airlineCode: currentSegment.marketingAirline || 'LH',
-        flightNo: currentSegment.flightNumber || '123',
-        departureDate: currentSegment.departureDateTime || '2025-04-22',
-        departure: currentSegment.origin || 'MUC',
-        arrival: currentSegment.destination || 'FRA',
-        cabinClass: currentSegment.cabinClass || 'A'
+      id: '001',
+      airlineCode: currentSegment.marketingAirline || 'LH',
+      flightNo: currentSegment.flightNumber || '123',
+      departureDate: currentSegment.departureDateTime || '2025-04-22',
+      departure: currentSegment.origin || 'MUC',
+      arrival: currentSegment.destination || 'FRA',
+      cabinClass: currentSegment.cabinClass || 'A'
     },
     layout: {
       decks: [
@@ -78,55 +61,40 @@ const currentSegment = flightSegments[segmentIndex] || {};
       type: 'seatMaps',
       config: JSON.stringify(seatMapData.config),
       flight: JSON.stringify(seatMapData.flight),
-      layout: JSON.stringify(seatMapData.layout),
-
-      // можно раскомментировать при необходимости
+      layout: JSON.stringify(seatMapData.layout)
       // availability: JSON.stringify(seatMapData.availability),
       // passengers: JSON.stringify(seatMapData.passengers)
-
     };
-
-    console.log('📤 [SeatMapComponent] sending to iframe with data:', {
-      config: JSON.stringify(seatMapData.config),
-      flight: JSON.stringify(seatMapData.flight),
-  });
 
     console.log('📤 [SeatMapComponent] sending to iframe:', message);
     iframe.contentWindow.postMessage(message, '*');
   };
 
-  console.log('🧠 SeatMapComponent is rendering!');
-
   useEffect(() => {
-    console.log('🛠️ SeatMapComponent mounted');
     console.log(`🔄 Segment index changed: ${segmentIndex}`);
-    sendToIframe(); // отправка при изменении сегмента
+    sendToIframe();
   }, [segmentIndex]);
 
   return (
-
     <div style={{ padding: '1rem' }}>
-      {/* окно с данными о рейсе */}
-      <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#333' }}>
-        <strong>🛫 Flight info:</strong>
-        <pre>{JSON.stringify(currentSegment, null, 2)}</pre>
-      </div>
-
       <div style={{ marginBottom: '1rem' }}>
         <label htmlFor="segmentSelect">Выберите сегмент: </label>
         <select
           id="segmentSelect"
           value={segmentIndex}
-          onChange={(e) => setSegmentIndex(Number(e.target.value))}>
-          {flightSegments.map((segment: any, index: number) => (
+          onChange={(e) => setSegmentIndex(Number(e.target.value))}
+        >
+          {flightSegments.map((segment, index) => (
             <option key={index} value={index}>
-              {segment.MarketingAirline?.EncodeDecodeElement?.Code || 'XX'} {segment.FlightNumber || '000'}
-              &nbsp;→&nbsp;
-              {segment.OriginLocation?.EncodeDecodeElement?.Code || '???'} –
-              {segment.DestinationLocation?.EncodeDecodeElement?.Code || '???'}
+              {segment.marketingAirline || 'XX'} {segment.flightNumber || '000'} → {segment.origin || '???'} – {segment.destination || '???'}
             </option>
           ))}
         </select>
+      </div>
+
+      <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#333' }}>
+        <strong>🛫 Flight info:</strong>
+        <pre>{JSON.stringify(currentSegment, null, 2)}</pre>
       </div>
 
       <iframe
@@ -142,9 +110,7 @@ const currentSegment = flightSegments[segmentIndex] || {};
         }}
       />
     </div>
-
   );
-
 };
 
 export default SeatMapComponentPricing;

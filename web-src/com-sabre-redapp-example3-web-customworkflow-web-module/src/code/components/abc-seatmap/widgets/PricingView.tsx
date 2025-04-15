@@ -8,7 +8,7 @@ import { showSeatMapPricingModal } from '../../../components/abc-seatmap/showSea
 export const PricingView = (data: AirPricingData) : React.ReactElement => {
     useEffect(() => {
         console.log('🚀 PricingView data:', data); // Лог для отладки
-        showSeatMapPricingModal(data); // Вызов функции показа модального окна c данными (data)
+        showSeatMapPricingModal(); // Вызов функции показа модального окна c данными (data)
     }, []);
 
     return (

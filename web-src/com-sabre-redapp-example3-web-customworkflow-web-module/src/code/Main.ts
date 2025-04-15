@@ -165,7 +165,7 @@ export class Main extends Module {
     })
   }
 
-  // Reservaion Info Window
+  // Reservation Info Window
   private showReservation(): void {
     const interstitialService = getService(InterstitialService);
     interstitialService.showInterstitial(15000);
